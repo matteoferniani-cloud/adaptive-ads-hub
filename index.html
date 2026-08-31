@@ -1,1 +1,535 @@
-<!doctype html><title>AdaPTive Ads Hub</title><p>In aggiornamento...</p>
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AdaPTive Ads Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#eef3f9;
+    --surface:#ffffff;
+    --surface-2:#f6f9fc;
+    --ink:#0b1220;
+    --ink-soft:#4b5a68;
+    --ink-faint:#8695a3;
+    --border:rgba(11,18,32,0.10);
+    --border-strong:rgba(11,18,32,0.18);
+    --navy:#08213f;
+    --navy-2:#123058;
+    --flare:#f2cf1e;
+    --flare-ink:#08213f;
+    --good:#1c7c4d;
+    --good-soft:#e4f4ea;
+    --good-border:rgba(28,124,77,0.28);
+    --warn:#a6650f;
+    --warn-soft:#faedd9;
+    --warn-border:rgba(166,101,15,0.3);
+    --bad:#b93838;
+    --bad-soft:#fbe7e7;
+    --bad-border:rgba(185,56,56,0.3);
+    --shadow:0 1px 2px rgba(8,33,63,0.06), 0 8px 24px -12px rgba(8,33,63,0.18);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#070f1e;
+      --surface:#0e1c30;
+      --surface-2:#122238;
+      --ink:#e9eff8;
+      --ink-soft:#a4b3c4;
+      --ink-faint:#6d7d8f;
+      --border:rgba(233,239,248,0.10);
+      --border-strong:rgba(233,239,248,0.18);
+      --navy:#04162c;
+      --navy-2:#0d2846;
+      --flare:#f2cf1e;
+      --flare-ink:#08213f;
+      --good:#57c689;
+      --good-soft:rgba(87,198,137,0.14);
+      --good-border:rgba(87,198,137,0.35);
+      --warn:#e0a542;
+      --warn-soft:rgba(224,165,66,0.14);
+      --warn-border:rgba(224,165,66,0.35);
+      --bad:#e0716f;
+      --bad-soft:rgba(224,113,111,0.14);
+      --bad-border:rgba(224,113,111,0.35);
+      --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#070f1e;
+    --surface:#0e1c30;
+    --surface-2:#122238;
+    --ink:#e9eff8;
+    --ink-soft:#a4b3c4;
+    --ink-faint:#6d7d8f;
+    --border:rgba(233,239,248,0.10);
+    --border-strong:rgba(233,239,248,0.18);
+    --navy:#04162c;
+    --navy-2:#0d2846;
+    --flare:#f2cf1e;
+    --flare-ink:#08213f;
+    --good:#57c689;
+    --good-soft:rgba(87,198,137,0.14);
+    --good-border:rgba(87,198,137,0.35);
+    --warn:#e0a542;
+    --warn-soft:rgba(224,165,66,0.14);
+    --warn-border:rgba(224,165,66,0.35);
+    --bad:#e0716f;
+    --bad-soft:rgba(224,113,111,0.14);
+    --bad-border:rgba(224,113,111,0.35);
+    --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Source Sans 3", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:"Big Shoulders Display", "Arial Narrow", sans-serif;
+    text-transform:uppercase; letter-spacing:.01em; text-wrap:balance;
+  }
+  .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+
+  a{ color:inherit; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    background:linear-gradient(155deg, var(--navy), var(--navy-2));
+    color:#f4f7fb;
+    padding:22px clamp(16px,4vw,40px);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .mark{
+    font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:26px;
+    background:var(--flare); color:var(--flare-ink); padding:2px 10px; border-radius:6px;
+    letter-spacing:.01em;
+  }
+  .brand .word{ font-size:15px; color:#c7d4e3; letter-spacing:.08em; text-transform:uppercase; }
+  .topbar .meta{ text-align:right; font-size:12.5px; color:#a9bad0; }
+  .topbar .meta b{ color:#f4f7fb; font-weight:600; }
+
+  /* ---------- layout ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:clamp(16px,3vw,32px) clamp(16px,4vw,40px) 64px; }
+
+  /* ---------- stat row ---------- */
+  .stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:22px 0 28px; }
+  .stat{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; box-shadow:var(--shadow);
+  }
+  .stat .label{ font-size:11.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+  .stat .value{ font-family:"Big Shoulders Display",sans-serif; font-weight:700; font-size:32px; line-height:1; }
+  .stat.good .value{ color:var(--good); }
+  .stat.warn .value{ color:var(--warn); }
+  .stat.bad .value{ color:var(--bad); }
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    margin-bottom:18px; padding-bottom:18px; border-bottom:1px solid var(--border);
+  }
+  .search{
+    flex:1 1 220px; position:relative;
+  }
+  .search input{
+    width:100%; padding:10px 14px; border-radius:9px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--ink); font:inherit; font-size:14px;
+  }
+  .search input:focus{ outline:2px solid var(--flare); outline-offset:1px; }
+  .toggle{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-soft);
+    user-select:none; cursor:pointer;
+  }
+  .toggle input{ width:16px; height:16px; accent-color:var(--navy); cursor:pointer; }
+
+  /* ---------- section headings ---------- */
+  .section-head{ display:flex; align-items:baseline; gap:12px; margin:34px 0 14px; }
+  .section-head h2{ font-size:22px; margin:0; font-weight:700; }
+  .section-head .count{ font-size:12.5px; color:var(--ink-faint); }
+
+  /* ---------- account cards ---------- */
+  .accounts{ display:flex; flex-direction:column; gap:10px; }
+  .account{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .account > .head{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer;
+    background:var(--surface);
+  }
+  .account > .head:hover{ background:var(--surface-2); }
+  .account .stripe{ width:5px; align-self:stretch; border-radius:3px; flex-shrink:0; }
+  .stripe.rosso{ background:var(--bad); }
+  .stripe.giallo{ background:var(--warn); }
+  .stripe.verde{ background:var(--good); }
+  .account .name{ font-weight:600; font-size:15px; flex:1 1 auto; min-width:160px; }
+  .account .sub{ font-size:12px; color:var(--ink-soft); }
+  .account .chev{ transition:transform .15s ease; color:var(--ink-faint); flex-shrink:0; }
+  .account.open .chev{ transform:rotate(90deg); }
+  .account .badges{ display:flex; gap:6px; flex-wrap:wrap; }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:20px; white-space:nowrap; border:1px solid transparent;
+  }
+  .pill.rosso{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border); }
+  .pill.giallo{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn-border); }
+  .pill.verde{ background:var(--good-soft); color:var(--good); border-color:var(--good-border); }
+  .pill.neutral{ background:var(--surface-2); color:var(--ink-soft); border-color:var(--border); }
+
+  .account .body{ display:none; border-top:1px solid var(--border); }
+  .account.open .body{ display:block; }
+
+  table.campaigns{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.campaigns th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:10px 16px 8px; border-bottom:1px solid var(--border);
+  }
+  table.campaigns td{ padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.campaigns tr:last-child td{ border-bottom:none; }
+  .campaigns .cname{ font-weight:600; }
+  .campaigns .reason{ color:var(--ink-soft); font-size:12px; margin-top:2px; }
+  .campaigns .cat{ font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; }
+
+  .cf-list{ padding:12px 16px 16px; }
+  .cf-list .cf-title{ font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:8px; }
+  .cf-row{ display:flex; justify-content:space-between; gap:12px; padding:6px 0; font-size:13px; border-top:1px solid var(--border); }
+  .cf-row:first-of-type{ border-top:none; }
+  .cf-row .cf-name{ flex:1 1 auto; }
+  .cf-row .cf-days{ color:var(--warn); font-weight:600; white-space:nowrap; }
+
+  /* ---------- rotation table ---------- */
+  .rotation{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  table.rotation-table{ width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+  table.rotation-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:12px 16px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--surface);
+  }
+  table.rotation-table td{ padding:10px 16px; border-bottom:1px solid var(--border); }
+  table.rotation-table tr:last-child td{ border-bottom:none; }
+  .days-bar-wrap{ display:flex; align-items:center; gap:8px; }
+  .days-bar{ height:6px; border-radius:3px; background:var(--warn); flex-shrink:0; }
+  .days-track{ flex:1 1 auto; background:var(--border); border-radius:3px; overflow:hidden; max-width:120px; }
+
+  .empty-state{ padding:28px; text-align:center; color:var(--ink-faint); font-size:13.5px; }
+
+  /* ---------- legend / footer ---------- */
+  .legend{
+    margin-top:40px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
+    padding:20px 22px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .legend h3{ font-size:14px; margin:0 0 10px; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .legend .rule{ margin:0 0 6px; }
+  .legend .rule b{ color:var(--ink); }
+  footer.page{
+    text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:28px;
+  }
+
+  [hidden]{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    .chev{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+
+<script type="application/json" id="data-payload">{"date":"2026-08-30","generated_label":"30 agosto 2026","totals":{"students":26,"campaigns":31,"green":20,"yellow_campaigns":0,"red":11,"spend":193.44,"creative_flags":107},"accounts":[{"name":"Eric Visentin Pubblicitario 1","campaigns":[{"name":"Traffico Broad & Geo Settembre","category":"traffico","spend":2.88,"risultati":105,"cost":0.027,"color":"verde","reason":"costo/risultato 0.03 EUR entro baseline 0.70 EUR"},{"name":"Modulo Contatti Settembre","category":"contatti","spend":10.26,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":13.14,"creative_flags":[],"worst":"rosso"},{"name":"dani_luceaccount2","campaigns":[{"name":"lancio_percorso_aumento_prezzi","category":"contatti","spend":2.64,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"},{"name":"Contatti Forli moduli nuove creative","category":"contatti","spend":9.06,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":11.7,"creative_flags":[],"worst":"rosso"},{"name":"Marco Di Micco Account pubblicitario","campaigns":[{"name":"Contatti luglio 2026","category":"contatti","spend":6.57,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":6.57,"creative_flags":[],"worst":"rosso"},{"name":"Matteo Burato 1","campaigns":[{"name":"Contatti BROAD luglio 2026","category":"contatti","spend":5.57,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":5.57,"creative_flags":[],"worst":"rosso"},{"name":"Diego Azzalin 1","campaigns":[{"name":"Contatti pinerolo luglio 2026","category":"contatti","spend":5.27,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":5.27,"creative_flags":[],"worst":"rosso"},{"name":"Lorenzo account 1","campaigns":[{"name":"Campagna contatti agosto 2026","category":"contatti","spend":4.76,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.76,"creative_flags":[],"worst":"rosso"},{"name":"Aleksas 1","campaigns":[{"name":"CONTATTI FITUP AGOSTO 2026","category":"contatti","spend":4.38,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.38,"creative_flags":[],"worst":"rosso"},{"name":"Gabriele Cumin 1","campaigns":[{"name":"CONTATTI UDINE luglio 2026","category":"contatti","spend":4.36,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.36,"creative_flags":[],"worst":"rosso"},{"name":"Maruzzella account 1","campaigns":[{"name":"campagna contatti settembre 26","category":"contatti","spend":4.11,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.11,"creative_flags":[],"worst":"rosso"},{"name":"Daniele Grasso ADS 1","campaigns":[{"name":"Contatti fitactive set 2026 (split)","category":"contatti","spend":3.19,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":3.19,"creative_flags":[{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":552},{"name":"Post di Instagram: 🫵🏻 Sei sedentario e vuoi...","days":552},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":544},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":544},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":534},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":524},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":524},{"name":"Post di Instagram: 🔥 Se sei stato sedentario per...","days":510},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":510},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":500},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":495},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":495},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":482},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":482},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":482},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":468},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":468},{"name":"Post di Instagram: Dopo uno stop, il corpo non...","days":451},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":451},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":440},{"name":"Post di Instagram: Sei sedentario, vuoi...","days":440},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":440},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":425},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":425},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":411},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":411},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":411},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":398},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":398},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":398},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":384},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":384},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":384},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":359},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":359},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":345},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":345},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":285},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":271}],"worst":"rosso"},{"name":"Nicola Piras account pubblicitario 1 ","campaigns":[{"name":"contatti valutazione shardana","category":"contatti","spend":6.97,"risultati":20,"cost":0.348,"color":"verde","reason":"costo/contatto 0.35 EUR entro 0.52 EUR (storico minimo x1.5)"},{"name":"Traffico Sardegna 14/02/2026","category":"traffico","spend":11.98,"risultati":162,"cost":0.074,"color":"verde","reason":"costo/risultato 0.07 EUR entro baseline 0.70 EUR"}],"spend":18.95,"creative_flags":[{"name":"NUovo short 2","days":197},{"name":"Video piatti","days":197},{"name":"NUovo short 1","days":197}],"worst":"giallo"},{"name":"Alberto Bellini Coach","campaigns":[{"name":"Contatti valutazione funzionale","category":"contatti","spend":4.43,"risultati":10,"cost":0.443,"color":"verde","reason":"costo/contatto 0.44 EUR entro 0.66 EUR (storico minimo x1.5)"},{"name":"TRAFFICO ADS MAGGIO 2026","category":"traffico","spend":9.79,"risultati":172,"cost":0.057,"color":"verde","reason":"costo/risultato 0.06 EUR entro baseline 0.70 EUR"}],"spend":14.22,"creative_flags":[{"name":"breve dolori articolari","days":116},{"name":"lunga riatletizz","days":116},{"name":"breve mal di schiena","days":116},{"name":"ads lunga 1","days":116},{"name":"lunga ernie","days":116},{"name":"3","days":77},{"name":"2","days":77},{"name":"infog 1","days":77},{"name":"1","days":77},{"name":"infog 3","days":77},{"name":"infog 2","days":77}],"worst":"giallo"},{"name":"Devid Lena account 1","campaigns":[{"name":"analisi corporea broad","category":"contatti","spend":4.01,"risultati":10,"cost":0.401,"color":"verde","reason":"costo/contatto 0.40 EUR entro 0.60 EUR (storico minimo x1.5)"},{"name":"traffico online donne over30","category":"traffico","spend":4.95,"risultati":53,"cost":0.093,"color":"verde","reason":"costo/risultato 0.09 EUR entro baseline 0.70 EUR"}],"spend":8.96,"creative_flags":[{"name":"adsmedia_2","days":132},{"name":"adsmedia_3","days":132}],"worst":"giallo"},{"name":"Adam 1","campaigns":[{"name":"contatti","category":"contatti","spend":5.8,"risultati":5,"cost":1.16,"color":"verde","reason":"costo/contatto 1.16 EUR entro 1.74 EUR (storico minimo x1.5)"}],"spend":5.8,"creative_flags":[{"name":"posturale 1","days":102}],"worst":"giallo"},{"name":"ad account #1","campaigns":[{"name":"Nuova campagna Contatti PORDENONE","category":"contatti","spend":5.37,"risultati":10,"cost":0.537,"color":"verde","reason":"costo/contatto 0.54 EUR entro 0.81 EUR (storico minimo x1.5)"}],"spend":5.37,"creative_flags":[{"name":"Sei di PDN ads 2","days":225},{"name":"Sei di PDn ads 3","days":225},{"name":"Hai super i 25 ads 3","days":225},{"name":"5-10-15kg ads 2","days":225},{"name":"Hai super i 25 ads 1","days":225},{"name":"5-10-15kg ads 1","days":225}],"worst":"giallo"},{"name":"Davide Deiana ads 1","campaigns":[],"spend":0,"creative_flags":[{"name":"Fisico magro ottieni più muscoli","days":737},{"name":"Il mio percorso","days":695},{"name":"Da magro a muscoloso nuovo","days":681},{"name":"Quanto devo allenarmi","days":669},{"name":"Dolori post allenamento","days":669},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":663},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":663},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":654},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":654},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":647},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":647},{"name":"Post di Instagram: Imparare a standardizzare le...","days":640},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":640},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":628},{"name":"Post di Instagram: Imparare a standardizzare le...","days":628},{"name":"Post di Instagram: Hai un fisico magro e non...","days":620},{"name":"Post di Instagram: Se hai un fisico magro,...","days":620},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":609},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":601},{"name":"Post di Instagram: Le tue braccia non crescono?...","days":592},{"name":"Post di Instagram: Non riesci a far crescere i...","days":592},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":592},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":582},{"name":"Post di Instagram: Non riesci a far crescere i...","days":582},{"name":"Post di Instagram: Perchè rimani magro e non...","days":582},{"name":"Post di Instagram: Non fare questi 2 errori se...","days":564},{"name":"Post di Instagram: Non riesci a far crescere i...","days":564},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":548},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":540},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":533},{"name":"Post di Instagram: Se ti alleni prima di un turno...","days":526},{"name":"Post di Instagram: Lavori su turni ma vuoi...","days":508},{"name":"Post di Instagram: 📩 Se anche tu hai un fisico...","days":499},{"name":"Post di Instagram: Nelle spinte su panca...","days":467},{"name":"Post di Instagram: Se non hai la postazione nel...","days":461},{"name":"Post di Instagram: 3 errori che non ti fanno...","days":444},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":437},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":432},{"name":"Post di Instagram: 🔴 Allenarsi ricercando dolori...","days":418}],"worst":"giallo"},{"name":"Francesco Spata Ads","campaigns":[],"spend":0,"creative_flags":[{"name":"Post di Instagram: 🌱 Sonia è entrata nel percorso...","days":376},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":355},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":355},{"name":"Instagram post: Hai provato a perdere peso mille...","days":328},{"name":"Post di Instagram: Vuoi un fisico migliore, ma...","days":202},{"name":"Post di Instagram: Smetti di rincorrere le mode...","days":176}],"worst":"giallo"},{"name":"LABZ Account 1","campaigns":[{"name":"Nuova campagna Traffico","category":"traffico","spend":25.6,"risultati":626,"cost":0.041,"color":"verde","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR"},{"name":"modulo contatti 1 mese app Labz","category":"contatti","spend":7.06,"risultati":15,"cost":0.471,"color":"verde","reason":"costo/contatto 0.47 EUR entro 0.71 EUR (storico minimo x1.5)"}],"spend":32.66,"creative_flags":[],"worst":"verde"},{"name":"Franco Biron Account 1","campaigns":[{"name":"ADS Modulo Contatti - Franco Biron","category":"contatti","spend":9.38,"risultati":15,"cost":0.625,"color":"verde","reason":"costo/contatto 0.63 EUR entro 0.94 EUR (storico minimo x1.5)"}],"spend":9.38,"creative_flags":[],"worst":"verde"},{"name":"Lorenzo Curto Account pubblicitario 1","campaigns":[{"name":"contatti broad analisi + 30 gg","category":"contatti","spend":7.96,"risultati":25,"cost":0.318,"color":"verde","reason":"costo/contatto 0.32 EUR entro 0.48 EUR (storico minimo x1.5)"}],"spend":7.96,"creative_flags":[],"worst":"verde"},{"name":"Lorenzo Izzi 1","campaigns":[{"name":"contatti settembre 2026","category":"contatti","spend":6.98,"risultati":5,"cost":1.396,"color":"verde","reason":"costo/contatto 1.40 EUR entro 2.09 EUR (storico minimo x1.5)"}],"spend":6.98,"creative_flags":[],"worst":"verde"},{"name":"Giovanni Fiorinelli pubblicitario 1","campaigns":[{"name":"campagna contatti settembre 2026","category":"contatti","spend":5.44,"risultati":15,"cost":0.363,"color":"verde","reason":"costo/contatto 0.36 EUR entro 0.54 EUR (storico minimo x1.5)"}],"spend":5.44,"creative_flags":[],"worst":"verde"},{"name":"Nicola Rampazzo account 1 ","campaigns":[{"name":"Contatti settembre 2026","category":"contatti","spend":4.44,"risultati":5,"cost":0.888,"color":"verde","reason":"costo/contatto 0.89 EUR entro 1.33 EUR (storico minimo x1.5)"}],"spend":4.44,"creative_flags":[],"worst":"verde"},{"name":"Antonio De Nicolo 1","campaigns":[{"name":"traffico settembre 26","category":"traffico","spend":3.75,"risultati":77,"cost":0.049,"color":"verde","reason":"costo/risultato 0.05 EUR entro baseline 0.70 EUR"}],"spend":3.75,"creative_flags":[],"worst":"verde"},{"name":"Amedeo Pezzi 1","campaigns":[{"name":"Campagna contatti studio Nami luglio 2026","category":"contatti","spend":3.35,"risultati":15,"cost":0.223,"color":"verde","reason":"costo/contatto 0.22 EUR entro 0.33 EUR (storico minimo x1.5)"}],"spend":3.35,"creative_flags":[],"worst":"verde"},{"name":"Valerio Nico Ads #1","campaigns":[{"name":"Contatti 25-55","category":"contatti","spend":1.51,"risultati":5,"cost":0.302,"color":"verde","reason":"costo/contatto 0.30 EUR entro 0.45 EUR (storico minimo x1.5)"},{"name":"Traffico 25-55","category":"traffico","spend":1.62,"risultati":39,"cost":0.042,"color":"verde","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR"}],"spend":3.13,"creative_flags":[],"worst":"verde"}]}</script>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">AdaPT</span>
+    <span class="word">Ads&nbsp;Hub</span>
+  </div>
+  <div class="meta">
+    Controllo del <b id="meta-date">—</b><br>
+    Aggiornato automaticamente ogni giorno
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <div class="search">
+      <input id="search-input" type="text" placeholder="Cerca studente…" autocomplete="off">
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="only-critical">
+      Mostra solo criticità
+    </label>
+  </div>
+
+  <div class="section-head">
+    <h2>Studenti</h2>
+    <span class="count" id="students-count"></span>
+  </div>
+  <div class="accounts" id="accounts"></div>
+  <div class="empty-state" id="accounts-empty" hidden>Nessuno studente corrisponde al filtro attuale.</div>
+
+  <div class="section-head">
+    <h2>Creatività da ruotare</h2>
+    <span class="count" id="rotation-count"></span>
+  </div>
+  <div class="rotation">
+    <table class="rotation-table">
+      <thead>
+        <tr><th>Studente</th><th>Creatività</th><th>Giorni attiva</th></tr>
+      </thead>
+      <tbody id="rotation-body"></tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <h3>Come leggere i colori</h3>
+    <p class="rule"><b>Traffico sul profilo</b> — verde fino a 0,70€/risultato · giallo fino a 1,05€ (baseline ×1,5, da discutere) · rosso oltre 1,05€.</p>
+    <p class="rule"><b>Modulo contatti</b> — soglia = minimo storico dello studente (o 5€ di default) ×1,5 · rosso se il costo/contatto la supera, o se zero conversioni nel periodo osservato.</p>
+    <p class="rule"><b>Creatività</b> — segnalata quando attiva da più di 60 giorni consecutivi senza essere rinnovata.</p>
+    <p class="rule" style="margin-top:10px;">Qualunque aumento di costo rispetto al giorno precedente viene comunque segnalato su Telegram, anche restando in zona verde.</p>
+  </div>
+
+  <footer class="page">AdaPTive Ads Monitor — dati Meta aggiornati quotidianamente dalla pipeline del System User.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var data = JSON.parse(document.getElementById("data-payload").textContent);
+
+  var COLOR_LABEL = {rosso:"Rosso", giallo:"Giallo", verde:"Verde"};
+
+  function fmtEuro(n){
+    if(n === null || n === undefined) return "n/d";
+    return "€ " + n.toFixed(2).replace(".", ",");
+  }
+  function fmtCost(n){
+    if(n === null || n === undefined) return "n/d";
+    return "€ " + n.toFixed(2).replace(".", ",");
+  }
+
+  // ---------- date label ----------
+  document.getElementById("meta-date").textContent = data.generated_label || data.date;
+
+  // ---------- stats ----------
+  var t = data.totals;
+  var statDefs = [
+    {label:"Studenti monitorati", value:t.students, cls:""},
+    {label:"Spesa (periodo)", value:fmtEuro(t.spend), cls:""},
+    {label:"Campagne in verde", value:t.green, cls:"good"},
+    {label:"Campagne in rosso", value:t.red, cls:"bad"},
+    {label:"Creatività da ruotare", value:t.creative_flags, cls:"warn"},
+  ];
+  var statsEl = document.getElementById("stats");
+  statDefs.forEach(function(s){
+    var div = document.createElement("div");
+    div.className = "stat" + (s.cls ? " " + s.cls : "");
+    div.innerHTML = '<div class="label"></div><div class="value num"></div>';
+    div.querySelector(".label").textContent = s.label;
+    div.querySelector(".value").textContent = s.value;
+    statsEl.appendChild(div);
+  });
+
+  // ---------- account cards ----------
+  var accountsEl = document.getElementById("accounts");
+  var emptyEl = document.getElementById("accounts-empty");
+  document.getElementById("students-count").textContent = data.accounts.length + " totali";
+
+  var cards = data.accounts.map(function(acc){
+    var card = document.createElement("div");
+    card.className = "account";
+    card.dataset.name = acc.name.toLowerCase();
+    card.dataset.worst = acc.worst;
+
+    var head = document.createElement("div");
+    head.className = "head";
+
+    var stripe = document.createElement("div");
+    stripe.className = "stripe " + acc.worst;
+    head.appendChild(stripe);
+
+    var name = document.createElement("div");
+    name.className = "name";
+    name.textContent = acc.name;
+    var sub = document.createElement("div");
+    sub.className = "sub";
+    sub.textContent = acc.campaigns.length + (acc.campaigns.length === 1 ? " campagna" : " campagne") +
+      " · " + fmtEuro(acc.spend);
+    name.appendChild(document.createElement("br"));
+    var subSpan = document.createElement("span");
+    subSpan.className = "sub";
+    subSpan.style.fontWeight = "400";
+    subSpan.textContent = sub.textContent;
+    name.appendChild(subSpan);
+    head.appendChild(name);
+
+    var badges = document.createElement("div");
+    badges.className = "badges";
+    var colorCounts = {rosso:0, giallo:0, verde:0};
+    acc.campaigns.forEach(function(c){ colorCounts[c.color] = (colorCounts[c.color]||0) + 1; });
+    ["rosso","giallo","verde"].forEach(function(col){
+      if(colorCounts[col] > 0){
+        var p = document.createElement("span");
+        p.className = "pill " + col;
+        p.textContent = colorCounts[col] + " " + COLOR_LABEL[col].toLowerCase();
+        badges.appendChild(p);
+      }
+    });
+    if(acc.creative_flags.length){
+      var p2 = document.createElement("span");
+      p2.className = "pill giallo";
+      p2.textContent = acc.creative_flags.length + " creatività";
+      badges.appendChild(p2);
+    }
+    head.appendChild(badges);
+
+    var chev = document.createElement("div");
+    chev.className = "chev";
+    chev.textContent = "▸";
+    head.appendChild(chev);
+
+    card.appendChild(head);
+    head.addEventListener("click", function(){ card.classList.toggle("open"); });
+
+    var body = document.createElement("div");
+    body.className = "body";
+
+    if(acc.campaigns.length){
+      var table = document.createElement("table");
+      table.className = "campaigns";
+      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Risultati</th><th>Costo</th><th>Stato</th></tr></thead>";
+      var tbody = document.createElement("tbody");
+      acc.campaigns.forEach(function(c){
+        var tr = document.createElement("tr");
+        var tdName = document.createElement("td");
+        tdName.innerHTML = '<div class="cname"></div><div class="cat"></div><div class="reason"></div>';
+        tdName.querySelector(".cname").textContent = c.name;
+        tdName.querySelector(".cat").textContent = c.category;
+        tdName.querySelector(".reason").textContent = c.reason;
+        tr.appendChild(tdName);
+
+        var tdSpend = document.createElement("td");
+        tdSpend.className = "num";
+        tdSpend.textContent = fmtEuro(c.spend);
+        tr.appendChild(tdSpend);
+
+        var tdRis = document.createElement("td");
+        tdRis.className = "num";
+        tdRis.textContent = c.risultati;
+        tr.appendChild(tdRis);
+
+        var tdCost = document.createElement("td");
+        tdCost.className = "num";
+        tdCost.textContent = fmtCost(c.cost);
+        tr.appendChild(tdCost);
+
+        var tdColor = document.createElement("td");
+        var pill = document.createElement("span");
+        pill.className = "pill " + c.color;
+        pill.textContent = COLOR_LABEL[c.color];
+        tdColor.appendChild(pill);
+        tr.appendChild(tdColor);
+
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      body.appendChild(table);
+    }
+
+    if(acc.creative_flags.length){
+      var cf = document.createElement("div");
+      cf.className = "cf-list";
+      cf.innerHTML = '<div class="cf-title">Creatività attive oltre soglia</div>';
+      acc.creative_flags.forEach(function(f){
+        var row = document.createElement("div");
+        row.className = "cf-row";
+        var n = document.createElement("div");
+        n.className = "cf-name";
+        n.textContent = f.name;
+        var d = document.createElement("div");
+        d.className = "cf-days";
+        d.textContent = f.days + " g";
+        row.appendChild(n); row.appendChild(d);
+        cf.appendChild(row);
+      });
+      body.appendChild(cf);
+    }
+
+    card.appendChild(body);
+    if(acc.worst === "rosso"){ card.classList.add("open"); }
+    accountsEl.appendChild(card);
+    return card;
+  });
+
+  // ---------- rotation table (top overdue, global) ----------
+  var allFlags = [];
+  data.accounts.forEach(function(acc){
+    acc.creative_flags.forEach(function(f){
+      allFlags.push({account:acc.name, name:f.name, days:f.days});
+    });
+  });
+  allFlags.sort(function(a,b){ return b.days - a.days; });
+  document.getElementById("rotation-count").textContent = allFlags.length + " totali · le più urgenti in alto";
+  var maxDays = allFlags.length ? allFlags[0].days : 1;
+  var rotBody = document.getElementById("rotation-body");
+  allFlags.slice(0, 40).forEach(function(f){
+    var tr = document.createElement("tr");
+    var tdAcc = document.createElement("td");
+    tdAcc.textContent = f.account;
+    var tdName = document.createElement("td");
+    tdName.textContent = f.name;
+    var tdDays = document.createElement("td");
+    var wrap = document.createElement("div");
+    wrap.className = "days-bar-wrap";
+    var num = document.createElement("span");
+    num.className = "num";
+    num.textContent = f.days + " g";
+    var track = document.createElement("div");
+    track.className = "days-track";
+    var bar = document.createElement("div");
+    bar.className = "days-bar";
+    bar.style.width = Math.max(6, Math.round((f.days / maxDays) * 100)) + "%";
+    track.appendChild(bar);
+    wrap.appendChild(num);
+    wrap.appendChild(track);
+    tdDays.appendChild(wrap);
+    tr.appendChild(tdAcc); tr.appendChild(tdName); tr.appendChild(tdDays);
+    rotBody.appendChild(tr);
+  });
+
+  // ---------- filtering ----------
+  var searchInput = document.getElementById("search-input");
+  var onlyCritical = document.getElementById("only-critical");
+
+  function applyFilters(){
+    var q = searchInput.value.trim().toLowerCase();
+    var critOnly = onlyCritical.checked;
+    var visibleCount = 0;
+    cards.forEach(function(card){
+      var matchesSearch = !q || card.dataset.name.indexOf(q) !== -1;
+      var matchesCrit = !critOnly || card.dataset.worst !== "verde";
+      var show = matchesSearch && matchesCrit;
+      card.hidden = !show;
+      if(show) visibleCount++;
+    });
+    emptyEl.hidden = visibleCount !== 0;
+  }
+  searchInput.addEventListener("input", applyFilters);
+  onlyCritical.addEventListener("change", applyFilters);
+})();
+</script>
+
+</body>
+</html>
