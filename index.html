@@ -97,6 +97,7 @@
   .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
 
   a{ color:inherit; }
+  button{ font:inherit; }
 
   /* ---------- top bar ---------- */
   .topbar{
@@ -122,9 +123,13 @@
   .stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:22px 0 28px; }
   .stat{
     background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:16px 18px; box-shadow:var(--shadow);
+    padding:16px 18px; box-shadow:var(--shadow); text-align:left;
   }
-  .stat .label{ font-size:11.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+  button.stat{ cursor:pointer; transition:transform .1s ease, box-shadow .1s ease; }
+  button.stat:hover{ box-shadow:0 2px 4px rgba(8,33,63,0.1), 0 12px 28px -12px rgba(8,33,63,0.26); }
+  button.stat:active{ transform:translateY(1px); }
+  .stat .label{ font-size:11.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .stat .label .clickhint{ font-size:10px; color:var(--ink-faint); text-transform:none; letter-spacing:0; }
   .stat .value{ font-family:"Big Shoulders Display",sans-serif; font-weight:700; font-size:32px; line-height:1; }
   .stat.good .value{ color:var(--good); }
   .stat.warn .value{ color:var(--warn); }
@@ -149,6 +154,16 @@
   }
   .toggle input{ width:16px; height:16px; accent-color:var(--navy); cursor:pointer; }
 
+  .window-switch{
+    display:inline-flex; border:1px solid var(--border-strong); border-radius:9px; overflow:hidden;
+  }
+  .window-switch button{
+    border:none; background:var(--surface); color:var(--ink-soft); padding:8px 13px; font-size:13px;
+    cursor:pointer; border-right:1px solid var(--border-strong);
+  }
+  .window-switch button:last-child{ border-right:none; }
+  .window-switch button.active{ background:var(--navy); color:#fff; font-weight:600; }
+
   /* ---------- section headings ---------- */
   .section-head{ display:flex; align-items:baseline; gap:12px; margin:34px 0 14px; }
   .section-head h2{ font-size:22px; margin:0; font-weight:700; }
@@ -170,7 +185,7 @@
   .stripe.giallo{ background:var(--warn); }
   .stripe.verde{ background:var(--good); }
   .account .name{ font-weight:600; font-size:15px; flex:1 1 auto; min-width:160px; }
-  .account .sub{ font-size:12px; color:var(--ink-soft); }
+  .account .sub{ font-size:12px; color:var(--ink-soft); font-weight:400; }
   .account .chev{ transition:transform .15s ease; color:var(--ink-faint); flex-shrink:0; }
   .account.open .chev{ transform:rotate(90deg); }
   .account .badges{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -184,21 +199,48 @@
   .pill.verde{ background:var(--good-soft); color:var(--good); border-color:var(--good-border); }
   .pill.neutral{ background:var(--surface-2); color:var(--ink-soft); border-color:var(--border); }
 
-  .account .body{ display:none; border-top:1px solid var(--border); }
+  .status-cell{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .mon-btn{
+    font-size:10.5px; font-weight:600; border:1px solid var(--border-strong); background:var(--surface);
+    color:var(--ink-soft); padding:3px 9px; border-radius:20px; cursor:pointer; white-space:nowrap;
+  }
+  .mon-btn:hover{ background:var(--surface-2); color:var(--ink); }
+  .mon-btn:disabled{ opacity:.55; cursor:default; }
+
+  .reason-tag{
+    display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+    padding:1px 7px; border-radius:5px; margin-bottom:3px;
+  }
+  .reason-tag.zero_conversioni, .reason-tag.zero_risultati{ background:var(--bad-soft); color:var(--bad); }
+  .reason-tag.costo_elevato{ background:var(--warn-soft); color:var(--warn); }
+  .reason-tag.ok{ background:var(--good-soft); color:var(--good); }
+
+  .account .body{ display:none; border-top:1px solid var(--border); padding:14px 16px 16px; }
   .account.open .body{ display:block; }
 
-  table.campaigns{ width:100%; border-collapse:collapse; font-size:13px; }
-  table.campaigns th{
-    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
-    color:var(--ink-faint); font-weight:600; padding:10px 16px 8px; border-bottom:1px solid var(--border);
+  .split{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:640px){ .split{ grid-template-columns:1fr; } }
+  .split-box{ border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface-2); }
+  .split-box .box-title{
+    font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:700;
+    padding:9px 12px; border-bottom:1px solid var(--border); background:var(--surface);
   }
-  table.campaigns td{ padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:top; }
-  table.campaigns tr:last-child td{ border-bottom:none; }
-  .campaigns .cname{ font-weight:600; }
-  .campaigns .reason{ color:var(--ink-soft); font-size:12px; margin-top:2px; }
-  .campaigns .cat{ font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; }
+  .split-box .box-empty{ padding:14px 12px; font-size:12.5px; color:var(--ink-faint); }
 
-  .cf-list{ padding:12px 16px 16px; }
+  table.campaigns{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.campaigns th{
+    text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:8px 12px 6px; border-bottom:1px solid var(--border);
+  }
+  table.campaigns td{ padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.campaigns tbody tr:last-child td{ border-bottom:none; }
+  table.campaigns tfoot td{ padding:8px 12px; border-top:2px solid var(--border); font-weight:700; }
+  table.campaigns tfoot .box-total-label{ color:var(--ink-soft); font-weight:600; text-transform:uppercase; font-size:10.5px; letter-spacing:.02em; }
+  .campaigns .cname{ font-weight:600; }
+  .campaigns .reason{ color:var(--ink-soft); font-size:11.5px; margin-top:2px; }
+  .campaigns .metric-note{ color:var(--ink-faint); font-size:10.5px; }
+
+  .cf-list{ padding:12px 16px 4px; }
   .cf-list .cf-title{ font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:8px; }
   .cf-row{ display:flex; justify-content:space-between; gap:12px; padding:6px 0; font-size:13px; border-top:1px solid var(--border); }
   .cf-row:first-of-type{ border-top:none; }
@@ -236,6 +278,33 @@
     text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:28px;
   }
 
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(4,10,20,0.55); display:flex; align-items:flex-start;
+    justify-content:center; padding:6vh 16px; z-index:50; backdrop-filter:blur(1px);
+  }
+  .modal{
+    background:var(--surface); border-radius:14px; max-width:640px; width:100%; max-height:84vh;
+    overflow-y:auto; box-shadow:0 20px 60px -12px rgba(0,0,0,0.4); border:1px solid var(--border);
+  }
+  .modal-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:16px 20px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);
+  }
+  .modal-head h3{ margin:0; font-size:18px; }
+  .modal-close{
+    border:none; background:var(--surface-2); color:var(--ink-soft); width:30px; height:30px; border-radius:8px;
+    cursor:pointer; font-size:16px; line-height:1;
+  }
+  .modal-body{ padding:14px 20px 22px; }
+  .modal-row{
+    display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);
+    font-size:13.5px;
+  }
+  .modal-row:last-child{ border-bottom:none; }
+  .modal-row .m-sub{ color:var(--ink-soft); font-size:12px; }
+  .modal-empty{ padding:20px 0; text-align:center; color:var(--ink-faint); font-size:13.5px; }
+
   [hidden]{ display:none !important; }
 
   @media (prefers-reduced-motion: reduce){
@@ -246,7 +315,7 @@
 <body>
 
 
-<script type="application/json" id="data-payload">{"date":"2026-08-30","generated_label":"30 agosto 2026","totals":{"students":26,"campaigns":31,"green":20,"yellow_campaigns":0,"red":11,"spend":193.44,"creative_flags":107},"accounts":[{"name":"Eric Visentin Pubblicitario 1","campaigns":[{"name":"Traffico Broad & Geo Settembre","category":"traffico","spend":2.88,"risultati":105,"cost":0.027,"color":"verde","reason":"costo/risultato 0.03 EUR entro baseline 0.70 EUR"},{"name":"Modulo Contatti Settembre","category":"contatti","spend":10.26,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":13.14,"creative_flags":[],"worst":"rosso"},{"name":"dani_luceaccount2","campaigns":[{"name":"lancio_percorso_aumento_prezzi","category":"contatti","spend":2.64,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"},{"name":"Contatti Forli moduli nuove creative","category":"contatti","spend":9.06,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":11.7,"creative_flags":[],"worst":"rosso"},{"name":"Marco Di Micco Account pubblicitario","campaigns":[{"name":"Contatti luglio 2026","category":"contatti","spend":6.57,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":6.57,"creative_flags":[],"worst":"rosso"},{"name":"Matteo Burato 1","campaigns":[{"name":"Contatti BROAD luglio 2026","category":"contatti","spend":5.57,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":5.57,"creative_flags":[],"worst":"rosso"},{"name":"Diego Azzalin 1","campaigns":[{"name":"Contatti pinerolo luglio 2026","category":"contatti","spend":5.27,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":5.27,"creative_flags":[],"worst":"rosso"},{"name":"Lorenzo account 1","campaigns":[{"name":"Campagna contatti agosto 2026","category":"contatti","spend":4.76,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.76,"creative_flags":[],"worst":"rosso"},{"name":"Aleksas 1","campaigns":[{"name":"CONTATTI FITUP AGOSTO 2026","category":"contatti","spend":4.38,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.38,"creative_flags":[],"worst":"rosso"},{"name":"Gabriele Cumin 1","campaigns":[{"name":"CONTATTI UDINE luglio 2026","category":"contatti","spend":4.36,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.36,"creative_flags":[],"worst":"rosso"},{"name":"Maruzzella account 1","campaigns":[{"name":"campagna contatti settembre 26","category":"contatti","spend":4.11,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":4.11,"creative_flags":[],"worst":"rosso"},{"name":"Daniele Grasso ADS 1","campaigns":[{"name":"Contatti fitactive set 2026 (split)","category":"contatti","spend":3.19,"risultati":0,"cost":null,"color":"rosso","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)"}],"spend":3.19,"creative_flags":[{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":552},{"name":"Post di Instagram: 🫵🏻 Sei sedentario e vuoi...","days":552},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":544},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":544},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":534},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":524},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":524},{"name":"Post di Instagram: 🔥 Se sei stato sedentario per...","days":510},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":510},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":500},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":495},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":495},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":482},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":482},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":482},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":468},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":468},{"name":"Post di Instagram: Dopo uno stop, il corpo non...","days":451},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":451},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":440},{"name":"Post di Instagram: Sei sedentario, vuoi...","days":440},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":440},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":425},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":425},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":411},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":411},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":411},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":398},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":398},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":398},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":384},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":384},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":384},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":359},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":359},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":345},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":345},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":285},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":271}],"worst":"rosso"},{"name":"Nicola Piras account pubblicitario 1 ","campaigns":[{"name":"contatti valutazione shardana","category":"contatti","spend":6.97,"risultati":20,"cost":0.348,"color":"verde","reason":"costo/contatto 0.35 EUR entro 0.52 EUR (storico minimo x1.5)"},{"name":"Traffico Sardegna 14/02/2026","category":"traffico","spend":11.98,"risultati":162,"cost":0.074,"color":"verde","reason":"costo/risultato 0.07 EUR entro baseline 0.70 EUR"}],"spend":18.95,"creative_flags":[{"name":"NUovo short 2","days":197},{"name":"Video piatti","days":197},{"name":"NUovo short 1","days":197}],"worst":"giallo"},{"name":"Alberto Bellini Coach","campaigns":[{"name":"Contatti valutazione funzionale","category":"contatti","spend":4.43,"risultati":10,"cost":0.443,"color":"verde","reason":"costo/contatto 0.44 EUR entro 0.66 EUR (storico minimo x1.5)"},{"name":"TRAFFICO ADS MAGGIO 2026","category":"traffico","spend":9.79,"risultati":172,"cost":0.057,"color":"verde","reason":"costo/risultato 0.06 EUR entro baseline 0.70 EUR"}],"spend":14.22,"creative_flags":[{"name":"breve dolori articolari","days":116},{"name":"lunga riatletizz","days":116},{"name":"breve mal di schiena","days":116},{"name":"ads lunga 1","days":116},{"name":"lunga ernie","days":116},{"name":"3","days":77},{"name":"2","days":77},{"name":"infog 1","days":77},{"name":"1","days":77},{"name":"infog 3","days":77},{"name":"infog 2","days":77}],"worst":"giallo"},{"name":"Devid Lena account 1","campaigns":[{"name":"analisi corporea broad","category":"contatti","spend":4.01,"risultati":10,"cost":0.401,"color":"verde","reason":"costo/contatto 0.40 EUR entro 0.60 EUR (storico minimo x1.5)"},{"name":"traffico online donne over30","category":"traffico","spend":4.95,"risultati":53,"cost":0.093,"color":"verde","reason":"costo/risultato 0.09 EUR entro baseline 0.70 EUR"}],"spend":8.96,"creative_flags":[{"name":"adsmedia_2","days":132},{"name":"adsmedia_3","days":132}],"worst":"giallo"},{"name":"Adam 1","campaigns":[{"name":"contatti","category":"contatti","spend":5.8,"risultati":5,"cost":1.16,"color":"verde","reason":"costo/contatto 1.16 EUR entro 1.74 EUR (storico minimo x1.5)"}],"spend":5.8,"creative_flags":[{"name":"posturale 1","days":102}],"worst":"giallo"},{"name":"ad account #1","campaigns":[{"name":"Nuova campagna Contatti PORDENONE","category":"contatti","spend":5.37,"risultati":10,"cost":0.537,"color":"verde","reason":"costo/contatto 0.54 EUR entro 0.81 EUR (storico minimo x1.5)"}],"spend":5.37,"creative_flags":[{"name":"Sei di PDN ads 2","days":225},{"name":"Sei di PDn ads 3","days":225},{"name":"Hai super i 25 ads 3","days":225},{"name":"5-10-15kg ads 2","days":225},{"name":"Hai super i 25 ads 1","days":225},{"name":"5-10-15kg ads 1","days":225}],"worst":"giallo"},{"name":"Davide Deiana ads 1","campaigns":[],"spend":0,"creative_flags":[{"name":"Fisico magro ottieni più muscoli","days":737},{"name":"Il mio percorso","days":695},{"name":"Da magro a muscoloso nuovo","days":681},{"name":"Quanto devo allenarmi","days":669},{"name":"Dolori post allenamento","days":669},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":663},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":663},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":654},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":654},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":647},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":647},{"name":"Post di Instagram: Imparare a standardizzare le...","days":640},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":640},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":628},{"name":"Post di Instagram: Imparare a standardizzare le...","days":628},{"name":"Post di Instagram: Hai un fisico magro e non...","days":620},{"name":"Post di Instagram: Se hai un fisico magro,...","days":620},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":609},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":601},{"name":"Post di Instagram: Le tue braccia non crescono?...","days":592},{"name":"Post di Instagram: Non riesci a far crescere i...","days":592},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":592},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":582},{"name":"Post di Instagram: Non riesci a far crescere i...","days":582},{"name":"Post di Instagram: Perchè rimani magro e non...","days":582},{"name":"Post di Instagram: Non fare questi 2 errori se...","days":564},{"name":"Post di Instagram: Non riesci a far crescere i...","days":564},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":548},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":540},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":533},{"name":"Post di Instagram: Se ti alleni prima di un turno...","days":526},{"name":"Post di Instagram: Lavori su turni ma vuoi...","days":508},{"name":"Post di Instagram: 📩 Se anche tu hai un fisico...","days":499},{"name":"Post di Instagram: Nelle spinte su panca...","days":467},{"name":"Post di Instagram: Se non hai la postazione nel...","days":461},{"name":"Post di Instagram: 3 errori che non ti fanno...","days":444},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":437},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":432},{"name":"Post di Instagram: 🔴 Allenarsi ricercando dolori...","days":418}],"worst":"giallo"},{"name":"Francesco Spata Ads","campaigns":[],"spend":0,"creative_flags":[{"name":"Post di Instagram: 🌱 Sonia è entrata nel percorso...","days":376},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":355},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":355},{"name":"Instagram post: Hai provato a perdere peso mille...","days":328},{"name":"Post di Instagram: Vuoi un fisico migliore, ma...","days":202},{"name":"Post di Instagram: Smetti di rincorrere le mode...","days":176}],"worst":"giallo"},{"name":"LABZ Account 1","campaigns":[{"name":"Nuova campagna Traffico","category":"traffico","spend":25.6,"risultati":626,"cost":0.041,"color":"verde","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR"},{"name":"modulo contatti 1 mese app Labz","category":"contatti","spend":7.06,"risultati":15,"cost":0.471,"color":"verde","reason":"costo/contatto 0.47 EUR entro 0.71 EUR (storico minimo x1.5)"}],"spend":32.66,"creative_flags":[],"worst":"verde"},{"name":"Franco Biron Account 1","campaigns":[{"name":"ADS Modulo Contatti - Franco Biron","category":"contatti","spend":9.38,"risultati":15,"cost":0.625,"color":"verde","reason":"costo/contatto 0.63 EUR entro 0.94 EUR (storico minimo x1.5)"}],"spend":9.38,"creative_flags":[],"worst":"verde"},{"name":"Lorenzo Curto Account pubblicitario 1","campaigns":[{"name":"contatti broad analisi + 30 gg","category":"contatti","spend":7.96,"risultati":25,"cost":0.318,"color":"verde","reason":"costo/contatto 0.32 EUR entro 0.48 EUR (storico minimo x1.5)"}],"spend":7.96,"creative_flags":[],"worst":"verde"},{"name":"Lorenzo Izzi 1","campaigns":[{"name":"contatti settembre 2026","category":"contatti","spend":6.98,"risultati":5,"cost":1.396,"color":"verde","reason":"costo/contatto 1.40 EUR entro 2.09 EUR (storico minimo x1.5)"}],"spend":6.98,"creative_flags":[],"worst":"verde"},{"name":"Giovanni Fiorinelli pubblicitario 1","campaigns":[{"name":"campagna contatti settembre 2026","category":"contatti","spend":5.44,"risultati":15,"cost":0.363,"color":"verde","reason":"costo/contatto 0.36 EUR entro 0.54 EUR (storico minimo x1.5)"}],"spend":5.44,"creative_flags":[],"worst":"verde"},{"name":"Nicola Rampazzo account 1 ","campaigns":[{"name":"Contatti settembre 2026","category":"contatti","spend":4.44,"risultati":5,"cost":0.888,"color":"verde","reason":"costo/contatto 0.89 EUR entro 1.33 EUR (storico minimo x1.5)"}],"spend":4.44,"creative_flags":[],"worst":"verde"},{"name":"Antonio De Nicolo 1","campaigns":[{"name":"traffico settembre 26","category":"traffico","spend":3.75,"risultati":77,"cost":0.049,"color":"verde","reason":"costo/risultato 0.05 EUR entro baseline 0.70 EUR"}],"spend":3.75,"creative_flags":[],"worst":"verde"},{"name":"Amedeo Pezzi 1","campaigns":[{"name":"Campagna contatti studio Nami luglio 2026","category":"contatti","spend":3.35,"risultati":15,"cost":0.223,"color":"verde","reason":"costo/contatto 0.22 EUR entro 0.33 EUR (storico minimo x1.5)"}],"spend":3.35,"creative_flags":[],"worst":"verde"},{"name":"Valerio Nico Ads #1","campaigns":[{"name":"Contatti 25-55","category":"contatti","spend":1.51,"risultati":5,"cost":0.302,"color":"verde","reason":"costo/contatto 0.30 EUR entro 0.45 EUR (storico minimo x1.5)"},{"name":"Traffico 25-55","category":"traffico","spend":1.62,"risultati":39,"cost":0.042,"color":"verde","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR"}],"spend":3.13,"creative_flags":[],"worst":"verde"}]}</script>
+<script type="application/json" id="data-payload">{"date":"2026-09-01","generated_label":"1 settembre 2026","totals":{"students":31,"students_total":61,"campaigns":49,"green":21,"yellow_campaigns":0,"red":28,"creative_flags":119,"monitoraggio":0},"accounts":[{"name":"LABZ Account 1","campaigns":[{"id":"120250643287890737","name":"Nuova campagna Traffico","category":"traffico","sub_type":"click","windows":{"1d":{"spend":23.31,"risultati":575,"cost_per_result":0.040539130434782605},"7d":{"spend":175.18,"risultati":4329,"cost_per_result":0.040466620466620466},"30d":{"spend":334.06,"risultati":8722,"cost_per_result":0.03830084842925934}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR","accepted":false},{"id":"120248280845610737","name":"modulo contatti 1 mese app Labz","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.97,"risultati":0,"cost_per_result":null},"7d":{"spend":57.98,"risultati":105,"cost_per_result":0.5521904761904761},"30d":{"spend":205.39,"risultati":335,"cost_per_result":0.6131044776119403}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120243386700740737","name":"Nuova campagna Traffico","category":"traffico","sub_type":"click","windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":335.1,"risultati":18435,"cost_per_result":0.018177379983726608}},"color":"rosso","reason_type":"zero_risultati","reason":"nessun risultato registrato nel periodo osservato","accepted":false}],"spend":30.28,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Nicola Piras account pubblicitario 1 ","campaigns":[{"id":"120251044360370394","name":"contatti valutazione shardana","category":"contatti","sub_type":null,"windows":{"1d":{"spend":5.29,"risultati":10,"cost_per_result":0.529},"7d":{"spend":36.74,"risultati":85,"cost_per_result":0.4322352941176471},"30d":{"spend":152.66,"risultati":360,"cost_per_result":0.4240555555555555}},"color":"rosso","reason_type":"costo_elevato","reason":"costo/contatto 0.53 EUR supera 0.52 EUR (storico minimo x1.5)","accepted":false},{"id":"120241541573400394","name":"Traffico Sardegna 14/02/2026","category":"traffico","sub_type":"click","windows":{"1d":{"spend":13.19,"risultati":178,"cost_per_result":0.07410112359550562},"7d":{"spend":83.11,"risultati":1259,"cost_per_result":0.06601270849880858},"30d":{"spend":362.6,"risultati":7189,"cost_per_result":0.0504381694255112}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.07 EUR entro baseline 0.70 EUR","accepted":false}],"spend":18.48,"creative_flags":[{"name":"NUovo short 2","days":199},{"name":"Video piatti","days":199},{"name":"NUovo short 1","days":199}],"worst":"rosso","has_activity":true},{"name":"Eric Visentin Pubblicitario 1","campaigns":[{"id":"120255348062770562","name":"Traffico Broad & Geo Settembre","category":"traffico","sub_type":"click","windows":{"1d":{"spend":6.52,"risultati":400,"cost_per_result":0.0163},"7d":{"spend":24.51,"risultati":1206,"cost_per_result":0.020323383084577117},"30d":{"spend":25.9,"risultati":1238,"cost_per_result":0.020920840064620354}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.02 EUR entro baseline 0.70 EUR","accepted":false},{"id":"120255343950120562","name":"Modulo Contatti Settembre","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.5,"risultati":5,"cost_per_result":1.3},"7d":{"spend":49.47,"risultati":20,"cost_per_result":2.4735},"30d":{"spend":51.73,"risultati":25,"cost_per_result":2.0692}},"color":"verde","reason_type":"ok","reason":"costo/contatto 1.30 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false},{"id":"120251673295050562","name":"Traffico Broad 25-55","category":"traffico","sub_type":"click","windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":27.35,"risultati":334,"cost_per_result":0.08188622754491018}},"color":"rosso","reason_type":"zero_risultati","reason":"nessun risultato registrato nel periodo osservato","accepted":false}],"spend":13.02,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"dani_luceaccount2","campaigns":[{"id":"52550255532579","name":"lancio_percorso_aumento_prezzi","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":21.61,"risultati":25,"cost_per_result":0.8644},"30d":{"spend":23.16,"risultati":25,"cost_per_result":0.9264}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"52531999411979","name":"Contatti Forli moduli nuove creative","category":"contatti","sub_type":null,"windows":{"1d":{"spend":8.79,"risultati":5,"cost_per_result":1.7579999999999998},"7d":{"spend":55.81,"risultati":30,"cost_per_result":1.8603333333333334},"30d":{"spend":242.08,"risultati":260,"cost_per_result":0.9310769230769231}},"color":"verde","reason_type":"ok","reason":"costo/contatto 1.76 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false}],"spend":8.79,"creative_flags":[{"name":"broad 3","days":62},{"name":"Donna 1","days":62},{"name":"broad 4","days":62},{"name":"broad 1","days":62},{"name":"Uomo 1","days":62}],"worst":"rosso","has_activity":true},{"name":"Aleksas 1","campaigns":[{"id":"120250775998830458","name":"CONTATTI FITUP AGOSTO 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":7.58,"risultati":0,"cost_per_result":null},"7d":{"spend":38.1,"risultati":15,"cost_per_result":2.54},"30d":{"spend":126.31,"risultati":60,"cost_per_result":2.105166666666667}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120244896909880458","name":"Nuova campagna Contatti","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":6.52,"risultati":0,"cost_per_result":null}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":7.58,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Lorenzo account 1","campaigns":[{"id":"120246226101140665","name":"Campagna contatti agosto 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.56,"risultati":5,"cost_per_result":1.3119999999999998},"7d":{"spend":37.95,"risultati":15,"cost_per_result":2.5300000000000002},"30d":{"spend":88.26,"risultati":45,"cost_per_result":1.9613333333333334}},"color":"verde","reason_type":"ok","reason":"costo/contatto 1.31 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false},{"id":"120242300817120665","name":"Campagna contatti maggio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":26.55,"risultati":0,"cost_per_result":null}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":6.56,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Matteo Burato 1","campaigns":[{"id":"120252635023950341","name":"Contatti BROAD luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.38,"risultati":0,"cost_per_result":null},"7d":{"spend":42.03,"risultati":5,"cost_per_result":8.406},"30d":{"spend":179.96,"risultati":65,"cost_per_result":2.768615384615385}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":6.38,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Lorenzo Curto Account pubblicitario 1","campaigns":[{"id":"120253806221590722","name":"contatti broad analisi + 30 gg","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.36,"risultati":30,"cost_per_result":0.21200000000000002},"7d":{"spend":34.14,"risultati":100,"cost_per_result":0.3414},"30d":{"spend":34.14,"risultati":100,"cost_per_result":0.3414}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.21 EUR entro 0.48 EUR (storico minimo x1.5)","accepted":false},{"id":"120242807902800722","name":"Nuova modulo contatti fitup 24/02/26","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":8.42,"risultati":10,"cost_per_result":0.842}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":6.36,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Gabriele Cumin 1","campaigns":[{"id":"120250953003010597","name":"CONTATTI UDINE luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.28,"risultati":0,"cost_per_result":null},"7d":{"spend":28.9,"risultati":5,"cost_per_result":5.779999999999999},"30d":{"spend":145.6,"risultati":45,"cost_per_result":3.2355555555555555}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":6.28,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Maruzzella account 1","campaigns":[{"id":"120249250715310413","name":"campagna contatti settembre 26","category":"contatti","sub_type":null,"windows":{"1d":{"spend":5.74,"risultati":10,"cost_per_result":0.5740000000000001},"7d":{"spend":22.85,"risultati":40,"cost_per_result":0.57125},"30d":{"spend":22.85,"risultati":40,"cost_per_result":0.57125}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.57 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false},{"id":"120248842491290413","name":"campagna agosto 17","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":15.61,"risultati":10,"cost_per_result":1.561},"30d":{"spend":63.06,"risultati":45,"cost_per_result":1.4013333333333333}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120244072777780413","name":"campagna contatti milano maggio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":16.78,"risultati":20,"cost_per_result":0.8390000000000001}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":5.74,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Daniele Grasso ADS 1","campaigns":[{"id":"120253528824490195","name":"Contatti fitactive set 2026 (split)","category":"contatti","sub_type":null,"windows":{"1d":{"spend":5.48,"risultati":0,"cost_per_result":null},"7d":{"spend":13.66,"risultati":5,"cost_per_result":2.732},"30d":{"spend":13.66,"risultati":5,"cost_per_result":2.732}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120248903332590195","name":"Contatti fitactive MAGGIO 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":10.12,"risultati":25,"cost_per_result":0.4048},"30d":{"spend":89.77,"risultati":190,"cost_per_result":0.47247368421052627}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":5.48,"creative_flags":[{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":554},{"name":"Post di Instagram: 🫵🏻 Sei sedentario e vuoi...","days":554},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":546},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":546},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":536},{"name":"Post di Instagram: 🏃🏻 Se corri non puoi...","days":526},{"name":"Post di Instagram: 🤔 Ti do’ 3 consigli se vuoi...","days":526},{"name":"Post di Instagram: 🔥 Se sei stato sedentario per...","days":512},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":512},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":502},{"name":"Post di Instagram: ✅ Ho scelto di lavorare con...","days":497},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":497},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":484},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":484},{"name":"Post di Instagram: “Correre brucia i muscoli!” Lo...","days":484},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":470},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":470},{"name":"Post di Instagram: Dopo uno stop, il corpo non...","days":453},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":453},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":442},{"name":"Post di Instagram: Sei sedentario, vuoi...","days":442},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":442},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":427},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":427},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":413},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":413},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":413},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":400},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":400},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":400},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":386},{"name":"Post di Instagram: 🥱 Se sei sedentario, vuoi...","days":386},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":386},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":361},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":361},{"name":"Post di Instagram: 👉🏻 Fuori ora “Da Zero a Pull...","days":347},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":347},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":287},{"name":"Post di Instagram: 👇🏻Sei sedentario, fuori forma...","days":273}],"worst":"rosso","has_activity":true},{"name":"Valerio Nico Ads #1","campaigns":[{"id":"120251207657680494","name":"Contatti 25-55","category":"contatti","sub_type":null,"windows":{"1d":{"spend":2.45,"risultati":0,"cost_per_result":null},"7d":{"spend":17.89,"risultati":20,"cost_per_result":0.8945000000000001},"30d":{"spend":77.92,"risultati":150,"cost_per_result":0.5194666666666666}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120244312292750494","name":"Traffico 25-55","category":"traffico","sub_type":"click","windows":{"1d":{"spend":1.76,"risultati":50,"cost_per_result":0.0352},"7d":{"spend":12.34,"risultati":342,"cost_per_result":0.03608187134502924},"30d":{"spend":53.61,"risultati":1424,"cost_per_result":0.03764747191011236}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR","accepted":false}],"spend":4.21,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"ad account #1","campaigns":[{"id":"120240455977720042","name":"Nuova campagna Contatti PORDENONE","category":"contatti","sub_type":null,"windows":{"1d":{"spend":4.03,"risultati":0,"cost_per_result":null},"7d":{"spend":35.49,"risultati":25,"cost_per_result":1.4196},"30d":{"spend":150.47,"risultati":115,"cost_per_result":1.3084347826086957}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":4.03,"creative_flags":[{"name":"Sei di PDN ads 2","days":227},{"name":"Sei di PDn ads 3","days":227},{"name":"Hai super i 25 ads 3","days":227},{"name":"5-10-15kg ads 2","days":227},{"name":"Hai super i 25 ads 1","days":227},{"name":"5-10-15kg ads 1","days":227}],"worst":"rosso","has_activity":true},{"name":"Antonio De Nicolo 1","campaigns":[{"id":"52640093826239","name":"traffico settembre 26","category":"traffico","sub_type":"click","windows":{"1d":{"spend":4.02,"risultati":95,"cost_per_result":0.04231578947368421},"7d":{"spend":38.18,"risultati":978,"cost_per_result":0.03903885480572597},"30d":{"spend":42.86,"risultati":1136,"cost_per_result":0.03772887323943662}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.04 EUR entro baseline 0.70 EUR","accepted":false},{"id":"52626018659039","name":"Campagna traffico profilo luglio 2026","category":"traffico","sub_type":"click","windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":54.79,"risultati":3015,"cost_per_result":0.018172470978441126}},"color":"rosso","reason_type":"zero_risultati","reason":"nessun risultato registrato nel periodo osservato","accepted":false}],"spend":4.02,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Amedeo Pezzi 1","campaigns":[{"id":"120249249856930043","name":"Campagna contatti studio Nami luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":3.78,"risultati":10,"cost_per_result":0.378},"7d":{"spend":21.29,"risultati":60,"cost_per_result":0.35483333333333333},"30d":{"spend":98.31,"risultati":395,"cost_per_result":0.2488860759493671}},"color":"rosso","reason_type":"costo_elevato","reason":"costo/contatto 0.38 EUR supera 0.33 EUR (storico minimo x1.5)","accepted":false}],"spend":3.78,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Giovanni Fiorinelli pubblicitario 1","campaigns":[{"id":"120251101035210679","name":"campagna contatti settembre 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":3.75,"risultati":5,"cost_per_result":0.75},"7d":{"spend":16.46,"risultati":20,"cost_per_result":0.8230000000000001},"30d":{"spend":16.46,"risultati":20,"cost_per_result":0.8230000000000001}},"color":"rosso","reason_type":"costo_elevato","reason":"costo/contatto 0.75 EUR supera 0.54 EUR (storico minimo x1.5)","accepted":false}],"spend":3.75,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Filippo account 1","campaigns":[{"id":"52533072066041","name":"CONTATTI FITACTIVE marzo 2026 - Campagna per acquisizione contatti su misura - Copia","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":6.96,"risultati":5,"cost_per_result":1.392}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":0.0,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Davide Deiana ads 1","campaigns":[{"id":"120245482708850719","name":"Contatti Uomini 25-55","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":26.53,"risultati":65,"cost_per_result":0.40815384615384614}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":0.0,"creative_flags":[{"name":"Fisico magro ottieni più muscoli","days":739},{"name":"Il mio percorso","days":697},{"name":"Da magro a muscoloso nuovo","days":683},{"name":"Quanto devo allenarmi","days":671},{"name":"Dolori post allenamento","days":671},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":665},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":665},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":656},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":656},{"name":"Post di Instagram: Hai un fisico magro e vuoi...","days":649},{"name":"Post di Instagram: Hai un fisico magro e vorresti...","days":649},{"name":"Post di Instagram: Imparare a standardizzare le...","days":642},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":642},{"name":"Post di Instagram: 3 errori che ti fanno rimanere...","days":630},{"name":"Post di Instagram: Imparare a standardizzare le...","days":630},{"name":"Post di Instagram: Hai un fisico magro e non...","days":622},{"name":"Post di Instagram: Se hai un fisico magro,...","days":622},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":611},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":603},{"name":"Post di Instagram: Le tue braccia non crescono?...","days":594},{"name":"Post di Instagram: Non riesci a far crescere i...","days":594},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":594},{"name":"Post di Instagram: 📩 Se hai un fisico magro e...","days":584},{"name":"Post di Instagram: Non riesci a far crescere i...","days":584},{"name":"Post di Instagram: Perchè rimani magro e non...","days":584},{"name":"Post di Instagram: Non fare questi 2 errori se...","days":566},{"name":"Post di Instagram: Non riesci a far crescere i...","days":566},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":550},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":542},{"name":"Post di Instagram: Vuoi costruire muscoli ma i...","days":535},{"name":"Post di Instagram: Se ti alleni prima di un turno...","days":528},{"name":"Post di Instagram: Lavori su turni ma vuoi...","days":510},{"name":"Post di Instagram: 📩 Se anche tu hai un fisico...","days":501},{"name":"Post di Instagram: Nelle spinte su panca...","days":469},{"name":"Post di Instagram: Se non hai la postazione nel...","days":463},{"name":"Post di Instagram: 3 errori che non ti fanno...","days":446},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":439},{"name":"Post di Instagram: Ti alleni già da un po’ e ti...","days":434},{"name":"Post di Instagram: 🔴 Allenarsi ricercando dolori...","days":420}],"worst":"rosso","has_activity":true},{"name":"Matteo Barella account 1","campaigns":[{"id":"120243923959650449","name":"contatti giugno 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":16.04,"risultati":10,"cost_per_result":1.6039999999999999}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":0.0,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"coach.francesco.dalla_bona","campaigns":[{"id":"120255583437100051","name":"ADS8_\"lezioni infinite\"_ago26","category":"traffico","sub_type":"click","windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":1.28,"risultati":16,"cost_per_result":0.08},"30d":{"spend":74.61,"risultati":708,"cost_per_result":0.1053813559322034}},"color":"rosso","reason_type":"zero_risultati","reason":"nessun risultato registrato nel periodo osservato","accepted":false},{"id":"120255515042720051","name":"Traffico_\"settembre\"_Lonato/montichiari_Da solo","category":"traffico","sub_type":"click","windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":1.16,"risultati":9,"cost_per_result":0.1288888888888889},"30d":{"spend":74.68,"risultati":755,"cost_per_result":0.09891390728476822}},"color":"rosso","reason_type":"zero_risultati","reason":"nessun risultato registrato nel periodo osservato","accepted":false}],"spend":0.0,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Alessio Mazzotta 1","campaigns":[{"id":"120249072267750444","name":"Contatti ripamonti luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":37.62,"risultati":5,"cost_per_result":7.523999999999999}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":0.0,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"simonecavallaro1","campaigns":[{"id":"120250431086950295","name":"campagna contatti - Copia","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":2.55,"risultati":0,"cost_per_result":null},"30d":{"spend":114.9,"risultati":15,"cost_per_result":7.66}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false},{"id":"120246026318270295","name":"campagna contatti","category":"contatti","sub_type":null,"windows":{"1d":{"spend":0.0,"risultati":0,"cost_per_result":null},"7d":{"spend":0.0,"risultati":0,"cost_per_result":null},"30d":{"spend":4.66,"risultati":0,"cost_per_result":null}},"color":"rosso","reason_type":"zero_conversioni","reason":"nessuna conversione registrata nel periodo osservato (proxy regola 48h)","accepted":false}],"spend":0.0,"creative_flags":[],"worst":"rosso","has_activity":true},{"name":"Alberto Bellini Coach","campaigns":[{"id":"120250744459070635","name":"Contatti valutazione funzionale","category":"contatti","sub_type":null,"windows":{"1d":{"spend":4.88,"risultati":15,"cost_per_result":0.3253333333333333},"7d":{"spend":35.53,"risultati":125,"cost_per_result":0.28424},"30d":{"spend":150.65,"risultati":554,"cost_per_result":0.2719314079422383}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.33 EUR entro 0.66 EUR (storico minimo x1.5)","accepted":false},{"id":"120247844754650635","name":"TRAFFICO ADS MAGGIO 2026","category":"traffico","sub_type":"click","windows":{"1d":{"spend":9.14,"risultati":138,"cost_per_result":0.06623188405797102},"7d":{"spend":71.56,"risultati":1275,"cost_per_result":0.05612549019607843},"30d":{"spend":300.63,"risultati":5807,"cost_per_result":0.0517702772515929}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.07 EUR entro baseline 0.70 EUR","accepted":false}],"spend":14.02,"creative_flags":[{"name":"breve dolori articolari","days":118},{"name":"lunga riatletizz","days":118},{"name":"breve mal di schiena","days":118},{"name":"ads lunga 1","days":118},{"name":"lunga ernie","days":118},{"name":"3","days":79},{"name":"2","days":79},{"name":"infog 1","days":79},{"name":"1","days":79},{"name":"infog 3","days":79},{"name":"infog 2","days":79}],"worst":"giallo","has_activity":true},{"name":"Devid Lena account 1","campaigns":[{"id":"52574872430088","name":"analisi corporea broad","category":"contatti","sub_type":null,"windows":{"1d":{"spend":2.67,"risultati":5,"cost_per_result":0.534},"7d":{"spend":28.83,"risultati":75,"cost_per_result":0.38439999999999996},"30d":{"spend":38.74,"risultati":150,"cost_per_result":0.2582666666666667}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.53 EUR entro 0.60 EUR (storico minimo x1.5)","accepted":false},{"id":"6988314854684","name":"traffico online donne over30","category":"traffico","sub_type":"click","windows":{"1d":{"spend":6.42,"risultati":83,"cost_per_result":0.07734939759036144},"7d":{"spend":35.0,"risultati":444,"cost_per_result":0.07882882882882883},"30d":{"spend":196.11,"risultati":2218,"cost_per_result":0.08841749323715059}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.08 EUR entro baseline 0.70 EUR","accepted":false}],"spend":9.09,"creative_flags":[{"name":"adsmedia_2","days":134},{"name":"adsmedia_3","days":134}],"worst":"giallo","has_activity":true},{"name":"Adam 1","campaigns":[{"id":"120247647052620522","name":"contatti","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.59,"risultati":15,"cost_per_result":0.4393333333333333},"7d":{"spend":43.3,"risultati":50,"cost_per_result":0.866},"30d":{"spend":181.63,"risultati":230,"cost_per_result":0.789695652173913}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.44 EUR entro 1.74 EUR (storico minimo x1.5)","accepted":false}],"spend":6.59,"creative_flags":[{"name":"posturale 1","days":104}],"worst":"giallo","has_activity":true},{"name":"Diego Azzalin 1","campaigns":[{"id":"120250044313740283","name":"Contatti pinerolo luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":4.9,"risultati":10,"cost_per_result":0.49000000000000005},"7d":{"spend":35.22,"risultati":25,"cost_per_result":1.4088},"30d":{"spend":122.99,"risultati":190,"cost_per_result":0.6473157894736842}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.49 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false}],"spend":4.9,"creative_flags":[{"name":"4","days":62},{"name":"5","days":62},{"name":"2","days":62},{"name":"8","days":62},{"name":"1","days":62},{"name":"3","days":62},{"name":"7","days":62}],"worst":"giallo","has_activity":true},{"name":"Francesco Spata Ads","campaigns":[],"spend":0,"creative_flags":[{"name":"Post di Instagram: 🌱 Sonia è entrata nel percorso...","days":378},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":357},{"name":"Post di Instagram: 🔎 In cosa consiste il mio...","days":357},{"name":"Instagram post: Hai provato a perdere peso mille...","days":330},{"name":"Post di Instagram: Vuoi un fisico migliore, ma...","days":204},{"name":"Post di Instagram: Smetti di rincorrere le mode...","days":178}],"worst":"giallo","has_activity":false},{"name":"Marco Di Micco Account pubblicitario","campaigns":[{"id":"120249148466350607","name":"Contatti luglio 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.74,"risultati":10,"cost_per_result":0.674},"7d":{"spend":42.89,"risultati":25,"cost_per_result":1.7156},"30d":{"spend":180.88,"risultati":195,"cost_per_result":0.9275897435897436}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.67 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false}],"spend":6.74,"creative_flags":[],"worst":"verde","has_activity":true},{"name":"Franco Biron Account 1","campaigns":[{"id":"120251011420360295","name":"ADS Modulo Contatti - Franco Biron","category":"contatti","sub_type":null,"windows":{"1d":{"spend":6.17,"risultati":15,"cost_per_result":0.41133333333333333},"7d":{"spend":24.51,"risultati":35,"cost_per_result":0.7002857142857143},"30d":{"spend":24.51,"risultati":35,"cost_per_result":0.7002857142857143}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.41 EUR entro 0.94 EUR (storico minimo x1.5)","accepted":false}],"spend":6.17,"creative_flags":[],"worst":"verde","has_activity":true},{"name":"Nicola Rampazzo account 1 ","campaigns":[{"id":"120250867857440748","name":"Contatti settembre 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":5.43,"risultati":5,"cost_per_result":1.0859999999999999},"7d":{"spend":41.01,"risultati":60,"cost_per_result":0.6835},"30d":{"spend":48.99,"risultati":80,"cost_per_result":0.612375}},"color":"verde","reason_type":"ok","reason":"costo/contatto 1.09 EUR entro 1.33 EUR (storico minimo x1.5)","accepted":false}],"spend":5.43,"creative_flags":[],"worst":"verde","has_activity":true},{"name":"Lorenzo Izzi 1","campaigns":[{"id":"120246447317750451","name":"contatti settembre 2026","category":"contatti","sub_type":null,"windows":{"1d":{"spend":4.89,"risultati":5,"cost_per_result":0.978},"7d":{"spend":42.59,"risultati":20,"cost_per_result":2.1295},"30d":{"spend":76.45,"risultati":60,"cost_per_result":1.2741666666666667}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.98 EUR entro 2.09 EUR (storico minimo x1.5)","accepted":false}],"spend":4.89,"creative_flags":[],"worst":"verde","has_activity":true},{"name":"Max Figliomene 2","campaigns":[{"id":"120251751695190028","name":"Contatti Max","category":"contatti","sub_type":null,"windows":{"1d":{"spend":2.16,"risultati":10,"cost_per_result":0.21600000000000003},"7d":{"spend":2.16,"risultati":10,"cost_per_result":0.21600000000000003},"30d":{"spend":2.16,"risultati":10,"cost_per_result":0.21600000000000003}},"color":"verde","reason_type":"ok","reason":"costo/contatto 0.22 EUR entro 7.50 EUR (storico minimo x1.5)","accepted":false}],"spend":2.16,"creative_flags":[],"worst":"verde","has_activity":true},{"name":"Nicola Rampazzo account pubblicitario 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Giulio Perticari 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Adam Donatiello account 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"466794494111384","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"804929130457549","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"NOME DELL'ACCOUNT PUBBLICITARIO 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Davide Deiana ads 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Valerio Nico Ads #2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Valerio Nico Ads #3","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Valentina Tomatis Online","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Ad Account 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Nicola Piras account pubblicitario 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Nome Account Pubblicitario 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Vale Tomatis 3 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Francesco Spata 3 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Devid Lena account 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Jacopo Ads 3 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Vale Tomatis 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Marco Proverbio","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Francesco Dalla Bona 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Daniele Grasso ADS 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Francesco Spata 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Marco Proverbio 2","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Eric Visentin 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"massimo pezzini 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Antonio De Nicolo account 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Labz account 2 ","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"2toHER account 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false},{"name":"Antonio Avolio Account 1","campaigns":[],"spend":0,"creative_flags":[],"worst":"verde","has_activity":false}],"red_clients":["LABZ Account 1","Nicola Piras account pubblicitario 1 ","Eric Visentin Pubblicitario 1","dani_luceaccount2","Aleksas 1","Lorenzo account 1","Matteo Burato 1","Lorenzo Curto Account pubblicitario 1","Gabriele Cumin 1","Maruzzella account 1","Daniele Grasso ADS 1","Valerio Nico Ads #1","ad account #1","Antonio De Nicolo 1","Amedeo Pezzi 1","Giovanni Fiorinelli pubblicitario 1","Filippo account 1","Davide Deiana ads 1","Matteo Barella account 1","coach.francesco.dalla_bona","Alessio Mazzotta 1","simonecavallaro1"],"monitoraggio":[]}</script>
 
 <div class="topbar">
   <div class="brand">
@@ -271,6 +340,11 @@
       <input type="checkbox" id="only-critical">
       Mostra solo criticità
     </label>
+    <div class="window-switch" id="window-switch" role="group" aria-label="Finestra temporale">
+      <button type="button" data-win="1d" class="active">Giorno</button>
+      <button type="button" data-win="7d">7 giorni</button>
+      <button type="button" data-win="30d">30 giorni</button>
+    </div>
   </div>
 
   <div class="section-head">
@@ -295,10 +369,11 @@
 
   <div class="legend">
     <h3>Come leggere i colori</h3>
-    <p class="rule"><b>Traffico sul profilo</b> — verde fino a 0,70€/risultato · giallo fino a 1,05€ (baseline ×1,5, da discutere) · rosso oltre 1,05€.</p>
+    <p class="rule"><b>Traffico sul profilo</b> — verde fino a 0,70€/risultato · giallo fino a 1,05€ (baseline ×1,5, da discutere) · rosso oltre 1,05€. Il "risultato" è il click per le campagne di puro traffico, il nuovo follower per le campagne di engagement.</p>
     <p class="rule"><b>Modulo contatti</b> — soglia = minimo storico dello studente (o 5€ di default) ×1,5 · rosso se il costo/contatto la supera, o se zero conversioni nel periodo osservato.</p>
     <p class="rule"><b>Creatività</b> — segnalata quando attiva da più di 60 giorni consecutivi senza essere rinnovata.</p>
-    <p class="rule" style="margin-top:10px;">Qualunque aumento di costo rispetto al giorno precedente viene comunque segnalato su Telegram, anche restando in zona verde.</p>
+    <p class="rule"><b>Monitoraggio</b> — campagne rosse tenute volutamente sotto osservazione invece che come allarme attivo (nessuna notifica Telegram per queste).</p>
+    <p class="rule" style="margin-top:10px;">Qualunque aumento di costo rispetto al giorno precedente viene comunque segnalato su Telegram, anche restando in zona verde. Le viste 7/30 giorni sono informative: le soglie di criticità restano ancorate al controllo giornaliero.</p>
   </div>
 
   <footer class="page">AdaPTive Ads Monitor — dati Meta aggiornati quotidianamente dalla pipeline del System User.</footer>
@@ -310,42 +385,322 @@
   var data = JSON.parse(document.getElementById("data-payload").textContent);
 
   var COLOR_LABEL = {rosso:"Rosso", giallo:"Giallo", verde:"Verde"};
+  var REASON_LABEL = {
+    zero_conversioni:"Zero conversioni", zero_risultati:"Zero risultati",
+    costo_elevato:"Costo elevato", ok:"Nella norma"
+  };
+  var currentWindow = "1d";
+
+  // ---------- pulsante Monitoraggio (Cloudflare Worker) ----------
+  var WORKER_URL = "https://adaptive-monitoraggio.matteoferniani.workers.dev/";
+
+  function updateMonBtnLabel(btn, accepted){
+    btn.textContent = accepted ? "Rimuovi" : "Monitora";
+    btn.title = accepted
+      ? "Rimuovi dal Monitoraggio (torna a essere un allarme attivo)"
+      : "Metti in Monitoraggio (rossa tenuta volutamente, nessun allarme Telegram)";
+  }
+
+  function monitoraggioAction(accountName, campaign, cnameEl, btn){
+    var goingToAccept = !campaign.accepted;
+    var action = goingToAccept ? "accept" : "reject";
+    var pwd = window.prompt(goingToAccept
+      ? "Password per mettere in Monitoraggio “" + campaign.name + "”:"
+      : "Password per rimuovere dal Monitoraggio “" + campaign.name + "”:");
+    if(pwd === null || pwd === "") return;
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Invio…";
+    fetch(WORKER_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        password: pwd, action: action, campaign_id: campaign.id,
+        account_name: accountName, campaign_name: campaign.name
+      })
+    }).then(function(resp){
+      return resp.json().catch(function(){ return {}; }).then(function(json){
+        return {status: resp.status, json: json};
+      });
+    }).then(function(res){
+      btn.disabled = false;
+      if(res.status === 200 && res.json && res.json.ok){
+        campaign.accepted = goingToAccept;
+        updateMonBtnLabel(btn, campaign.accepted);
+        cnameEl.textContent = campaign.name + (campaign.accepted ? " (accettata)" : "");
+        window.alert(goingToAccept
+          ? "Fatto. La dashboard mostrerà “in monitoraggio” dal prossimo aggiornamento automatico; da oggi non riceverai più l'allarme Telegram per questa campagna."
+          : "Fatto. Tornerà a comparire come criticità attiva (e con l'allarme Telegram) dal prossimo aggiornamento automatico.");
+      } else {
+        btn.textContent = originalLabel;
+        window.alert("Non è stato possibile completare l'operazione: " +
+          (res.json && res.json.error ? res.json.error : ("errore " + res.status)));
+      }
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      window.alert("Errore di connessione: " + err.message);
+    });
+  }
 
   function fmtEuro(n){
     if(n === null || n === undefined) return "n/d";
-    return "€ " + n.toFixed(2).replace(".", ",");
+    return "€ " + n.toFixed(2).replace(".", ",");
   }
   function fmtCost(n){
     if(n === null || n === undefined) return "n/d";
-    return "€ " + n.toFixed(2).replace(".", ",");
+    return "€ " + n.toFixed(3).replace(/0+$/,"").replace(/\.$/,"").replace(".", ",");
   }
 
   // ---------- date label ----------
   document.getElementById("meta-date").textContent = data.generated_label || data.date;
 
+  // ---------- modal ----------
+  function openModal(title, items, renderRow){
+    var overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    var modal = document.createElement("div");
+    modal.className = "modal";
+    var head = document.createElement("div");
+    head.className = "modal-head";
+    var h3 = document.createElement("h3");
+    h3.textContent = title;
+    var closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "✕";
+    closeBtn.setAttribute("aria-label", "Chiudi");
+    head.appendChild(h3); head.appendChild(closeBtn);
+    var body = document.createElement("div");
+    body.className = "modal-body";
+    if(!items.length){
+      var empty = document.createElement("div");
+      empty.className = "modal-empty";
+      empty.textContent = "Nessun elemento al momento.";
+      body.appendChild(empty);
+    } else {
+      items.forEach(function(item){ body.appendChild(renderRow(item)); });
+    }
+    modal.appendChild(head); modal.appendChild(body);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    function close(){ overlay.remove(); document.removeEventListener("keydown", onKey); }
+    function onKey(e){ if(e.key === "Escape") close(); }
+    overlay.addEventListener("click", function(e){ if(e.target === overlay) close(); });
+    closeBtn.addEventListener("click", close);
+    document.addEventListener("keydown", onKey);
+  }
+
+  function simpleRow(main, sub){
+    var row = document.createElement("div");
+    row.className = "modal-row";
+    var left = document.createElement("div");
+    left.textContent = main;
+    var right = document.createElement("div");
+    right.className = "m-sub";
+    right.textContent = sub || "";
+    row.appendChild(left); row.appendChild(right);
+    return row;
+  }
+
   // ---------- stats ----------
   var t = data.totals;
-  var statDefs = [
-    {label:"Studenti monitorati", value:t.students, cls:""},
-    {label:"Spesa (periodo)", value:fmtEuro(t.spend), cls:""},
-    {label:"Campagne in verde", value:t.green, cls:"good"},
-    {label:"Campagne in rosso", value:t.red, cls:"bad"},
-    {label:"Creatività da ruotare", value:t.creative_flags, cls:"warn"},
-  ];
   var statsEl = document.getElementById("stats");
-  statDefs.forEach(function(s){
-    var div = document.createElement("div");
-    div.className = "stat" + (s.cls ? " " + s.cls : "");
-    div.innerHTML = '<div class="label"></div><div class="value num"></div>';
-    div.querySelector(".label").textContent = s.label;
-    div.querySelector(".value").textContent = s.value;
-    statsEl.appendChild(div);
-  });
+
+  function addStat(opts){
+    var el;
+    if(opts.onClick){
+      el = document.createElement("button");
+      el.type = "button";
+    } else {
+      el = document.createElement("div");
+    }
+    el.className = "stat" + (opts.cls ? " " + opts.cls : "");
+    var label = document.createElement("div");
+    label.className = "label";
+    var labelText = document.createElement("span");
+    labelText.textContent = opts.label;
+    label.appendChild(labelText);
+    if(opts.onClick){
+      var hint = document.createElement("span");
+      hint.className = "clickhint";
+      hint.textContent = "→";
+      label.appendChild(hint);
+    }
+    var value = document.createElement("div");
+    value.className = "value num";
+    value.textContent = opts.value;
+    el.appendChild(label); el.appendChild(value);
+    if(opts.onClick){ el.addEventListener("click", opts.onClick); }
+    statsEl.appendChild(el);
+  }
+
+  addStat({label:"Studenti monitorati", value:t.students});
+
+  addStat({label:"Database studenti", value:t.students_total, onClick:function(){
+    var all = data.accounts.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
+    openModal("Database studenti (" + all.length + ")", all, function(acc){
+      var sub = acc.has_activity ? (acc.campaigns.length + " campagne · " + fmtEuro(acc.spend)) : "nessuna campagna attiva";
+      return simpleRow(acc.name, sub);
+    });
+  }});
+
+  addStat({label:"Campagne in verde", value:t.green, cls:"good"});
+
+  addStat({label:"Clienti in rosso", value:data.red_clients.length, cls:"bad", onClick:function(){
+    openModal("Clienti in rosso (" + data.red_clients.length + ")", data.red_clients, function(name){
+      return simpleRow(name, "");
+    });
+  }});
+
+  addStat({label:"Monitoraggio", value:t.monitoraggio, cls:"warn", onClick:function(){
+    openModal("Monitoraggio — rossi accettati (" + data.monitoraggio.length + ")", data.monitoraggio, function(item){
+      return simpleRow(item.account + " — " + item.campaign, item.reason);
+    });
+  }});
 
   // ---------- account cards ----------
   var accountsEl = document.getElementById("accounts");
   var emptyEl = document.getElementById("accounts-empty");
   document.getElementById("students-count").textContent = data.accounts.length + " totali";
+
+  function metricNote(c){
+    if(c.category === "contatti") return "";
+    if(c.sub_type === "engagement") return "/follower";
+    return "/click";
+  }
+
+  function buildCampaignsTable(campaigns, category, accountName){
+    var box = document.createElement("div");
+    box.className = "split-box";
+    var titleEl = document.createElement("div");
+    titleEl.className = "box-title";
+    titleEl.textContent = category === "traffico" ? "Traffico sul profilo" : "Modulo contatti";
+    box.appendChild(titleEl);
+
+    var filtered = campaigns.filter(function(c){ return c.category === category; });
+    if(!filtered.length){
+      var empty = document.createElement("div");
+      empty.className = "box-empty";
+      empty.textContent = "Nessuna campagna in questa categoria.";
+      box.appendChild(empty);
+      return box;
+    }
+
+    var table = document.createElement("table");
+    table.className = "campaigns";
+    if(category === "traffico"){
+      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Costo</th><th>Stato</th></tr></thead>";
+    } else {
+      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Risultati</th><th>Costo/contatto</th><th>Stato</th></tr></thead>";
+    }
+    var tbody = document.createElement("tbody");
+    table.dataset.category = category;
+    filtered.forEach(function(c){
+      var tr = document.createElement("tr");
+      tr.dataset.campaignRow = "1";
+      tr.__campaign = c;
+
+      var tdName = document.createElement("td");
+      var reasonTag = document.createElement("div");
+      reasonTag.className = "reason-tag " + c.reason_type;
+      reasonTag.textContent = REASON_LABEL[c.reason_type] || c.reason_type;
+      var cname = document.createElement("div");
+      cname.className = "cname";
+      cname.textContent = c.name + (c.accepted ? " (accettata)" : "");
+      var reasonTxt = document.createElement("div");
+      reasonTxt.className = "reason";
+      reasonTxt.textContent = c.reason;
+      tdName.appendChild(reasonTag); tdName.appendChild(cname); tdName.appendChild(reasonTxt);
+      tr.appendChild(tdName);
+
+      var tdSpend = document.createElement("td");
+      tdSpend.className = "num spend-cell";
+      tr.appendChild(tdSpend);
+
+      if(category === "contatti"){
+        var tdRis = document.createElement("td");
+        tdRis.className = "num ris-cell";
+        tr.appendChild(tdRis);
+      }
+
+      var tdCost = document.createElement("td");
+      tdCost.className = "num cost-cell";
+      tr.appendChild(tdCost);
+
+      var tdColor = document.createElement("td");
+      tdColor.className = "status-cell";
+      var pill = document.createElement("span");
+      pill.className = "pill " + c.color;
+      pill.textContent = COLOR_LABEL[c.color];
+      tdColor.appendChild(pill);
+      if(c.color === "rosso"){
+        var monBtn = document.createElement("button");
+        monBtn.type = "button";
+        monBtn.className = "mon-btn";
+        updateMonBtnLabel(monBtn, c.accepted);
+        monBtn.addEventListener("click", function(){
+          monitoraggioAction(accountName, c, cname, monBtn);
+        });
+        tdColor.appendChild(monBtn);
+      }
+      tr.appendChild(tdColor);
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    var tfoot = document.createElement("tfoot");
+    var trFoot = document.createElement("tr");
+    var tdLabel = document.createElement("td");
+    tdLabel.className = "box-total-label";
+    tdLabel.textContent = "Totale " + (category === "traffico" ? "traffico" : "modulo contatti");
+    trFoot.appendChild(tdLabel);
+    var tdTotal = document.createElement("td");
+    tdTotal.className = "num box-total-spend";
+    trFoot.appendChild(tdTotal);
+    var trailingCols = category === "traffico" ? 2 : 3;
+    var tdBlank = document.createElement("td");
+    tdBlank.colSpan = trailingCols;
+    trFoot.appendChild(tdBlank);
+    tfoot.appendChild(trFoot);
+    table.appendChild(tfoot);
+    table.__campaigns = filtered;
+
+    box.appendChild(table);
+    return box;
+  }
+
+  function refreshBoxTotal(table){
+    var campaigns = table.__campaigns || [];
+    var total = campaigns.reduce(function(sum, c){
+      var w = c.windows[currentWindow] || c.windows["1d"];
+      return sum + (w.spend || 0);
+    }, 0);
+    var cell = table.querySelector(".box-total-spend");
+    if(cell) cell.textContent = fmtEuro(total);
+  }
+
+  function refreshCampaignRow(tr){
+    var c = tr.__campaign;
+    var w = c.windows[currentWindow] || c.windows["1d"];
+    tr.querySelector(".spend-cell").textContent = fmtEuro(w.spend);
+    var risCell = tr.querySelector(".ris-cell");
+    if(risCell) risCell.textContent = (w.risultati === null || w.risultati === undefined) ? "n/d" : w.risultati;
+    var costCell = tr.querySelector(".cost-cell");
+    var note = metricNote(c);
+    costCell.innerHTML = "";
+    var costMain = document.createTextNode(fmtCost(w.cost_per_result));
+    costCell.appendChild(costMain);
+    if(note && w.cost_per_result !== null && w.cost_per_result !== undefined){
+      var noteEl = document.createElement("span");
+      noteEl.className = "metric-note";
+      noteEl.textContent = " " + note;
+      costCell.appendChild(noteEl);
+    }
+  }
+
+  var allCampaignRows = [];
+  var allCampaignTables = [];
 
   var cards = data.accounts.map(function(acc){
     var card = document.createElement("div");
@@ -363,22 +718,23 @@
     var name = document.createElement("div");
     name.className = "name";
     name.textContent = acc.name;
-    var sub = document.createElement("div");
-    sub.className = "sub";
-    sub.textContent = acc.campaigns.length + (acc.campaigns.length === 1 ? " campagna" : " campagne") +
-      " · " + fmtEuro(acc.spend);
     name.appendChild(document.createElement("br"));
     var subSpan = document.createElement("span");
     subSpan.className = "sub";
-    subSpan.style.fontWeight = "400";
-    subSpan.textContent = sub.textContent;
+    subSpan.textContent = acc.has_activity
+      ? (acc.campaigns.length + (acc.campaigns.length === 1 ? " campagna" : " campagne") + " · " + fmtEuro(acc.spend))
+      : "nessuna campagna attiva";
     name.appendChild(subSpan);
     head.appendChild(name);
 
     var badges = document.createElement("div");
     badges.className = "badges";
     var colorCounts = {rosso:0, giallo:0, verde:0};
-    acc.campaigns.forEach(function(c){ colorCounts[c.color] = (colorCounts[c.color]||0) + 1; });
+    var monitoraggioCount = 0;
+    acc.campaigns.forEach(function(c){
+      if(c.accepted){ monitoraggioCount++; return; }
+      colorCounts[c.color] = (colorCounts[c.color]||0) + 1;
+    });
     ["rosso","giallo","verde"].forEach(function(col){
       if(colorCounts[col] > 0){
         var p = document.createElement("span");
@@ -387,6 +743,12 @@
         badges.appendChild(p);
       }
     });
+    if(monitoraggioCount > 0){
+      var pm = document.createElement("span");
+      pm.className = "pill neutral";
+      pm.textContent = monitoraggioCount + (monitoraggioCount === 1 ? " in monitoraggio" : " in monitoraggio");
+      badges.appendChild(pm);
+    }
     if(acc.creative_flags.length){
       var p2 = document.createElement("span");
       p2.className = "pill giallo";
@@ -407,45 +769,19 @@
     body.className = "body";
 
     if(acc.campaigns.length){
-      var table = document.createElement("table");
-      table.className = "campaigns";
-      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Risultati</th><th>Costo</th><th>Stato</th></tr></thead>";
-      var tbody = document.createElement("tbody");
-      acc.campaigns.forEach(function(c){
-        var tr = document.createElement("tr");
-        var tdName = document.createElement("td");
-        tdName.innerHTML = '<div class="cname"></div><div class="cat"></div><div class="reason"></div>';
-        tdName.querySelector(".cname").textContent = c.name;
-        tdName.querySelector(".cat").textContent = c.category;
-        tdName.querySelector(".reason").textContent = c.reason;
-        tr.appendChild(tdName);
-
-        var tdSpend = document.createElement("td");
-        tdSpend.className = "num";
-        tdSpend.textContent = fmtEuro(c.spend);
-        tr.appendChild(tdSpend);
-
-        var tdRis = document.createElement("td");
-        tdRis.className = "num";
-        tdRis.textContent = c.risultati;
-        tr.appendChild(tdRis);
-
-        var tdCost = document.createElement("td");
-        tdCost.className = "num";
-        tdCost.textContent = fmtCost(c.cost);
-        tr.appendChild(tdCost);
-
-        var tdColor = document.createElement("td");
-        var pill = document.createElement("span");
-        pill.className = "pill " + c.color;
-        pill.textContent = COLOR_LABEL[c.color];
-        tdColor.appendChild(pill);
-        tr.appendChild(tdColor);
-
-        tbody.appendChild(tr);
+      var split = document.createElement("div");
+      split.className = "split";
+      var trafficBox = buildCampaignsTable(acc.campaigns, "traffico", acc.name);
+      var contattiBox = buildCampaignsTable(acc.campaigns, "contatti", acc.name);
+      split.appendChild(trafficBox);
+      split.appendChild(contattiBox);
+      body.appendChild(split);
+      Array.prototype.forEach.call(body.querySelectorAll("tr[data-campaign-row]"), function(tr){
+        allCampaignRows.push(tr);
       });
-      table.appendChild(tbody);
-      body.appendChild(table);
+      Array.prototype.forEach.call(split.querySelectorAll("table.campaigns"), function(t){
+        allCampaignTables.push(t);
+      });
     }
 
     if(acc.creative_flags.length){
@@ -471,6 +807,20 @@
     if(acc.worst === "rosso"){ card.classList.add("open"); }
     accountsEl.appendChild(card);
     return card;
+  });
+
+  allCampaignRows.forEach(refreshCampaignRow);
+  allCampaignTables.forEach(refreshBoxTotal);
+
+  // ---------- window switch ----------
+  var winButtons = document.querySelectorAll("#window-switch button");
+  winButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      currentWindow = btn.dataset.win;
+      winButtons.forEach(function(b){ b.classList.toggle("active", b === btn); });
+      allCampaignRows.forEach(refreshCampaignRow);
+      allCampaignTables.forEach(refreshBoxTotal);
+    });
   });
 
   // ---------- rotation table (top overdue, global) ----------
