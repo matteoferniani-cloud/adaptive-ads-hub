@@ -222,13 +222,13 @@
 
   .split{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   @media (max-width:640px){ .split{ grid-template-columns:1fr; } }
+  .split.single-box .split-box{ grid-column:1 / -1; }
   .split-box{ border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface-2); }
   .split-box .box-title{
     font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:700;
     padding:9px 12px; border-bottom:1px solid var(--border); background:var(--surface);
   }
   .split-box .box-empty{ padding:14px 12px; font-size:12.5px; color:var(--ink-faint); }
-  table.campaigns td.box-empty-filtered{ padding:12px; font-size:12px; color:var(--ink-faint); text-align:center; border-bottom:none; }
 
   table.campaigns{ width:100%; border-collapse:collapse; font-size:12.5px; }
   table.campaigns th{
@@ -593,6 +593,7 @@
       empty.className = "box-empty";
       empty.textContent = "Nessuna campagna in questa categoria.";
       box.appendChild(empty);
+      box.dataset.hasRed = "0";
       return box;
     }
 
@@ -659,18 +660,8 @@
       tbody.appendChild(tr);
     });
 
-    var noRedRow = document.createElement("tr");
-    noRedRow.dataset.noRedPlaceholder = "1";
-    noRedRow.hidden = true;
-    var noRedCell = document.createElement("td");
-    noRedCell.colSpan = category === "traffico" ? 4 : 5;
-    noRedCell.className = "box-empty-filtered";
-    noRedCell.textContent = "Nessuna campagna in rosso in questa categoria.";
-    noRedRow.appendChild(noRedCell);
-    tbody.appendChild(noRedRow);
-
     table.appendChild(tbody);
-    campaignTablesInfo.push({tbody: tbody, placeholder: noRedRow});
+    box.dataset.hasRed = filtered.some(function(c){ return c.color === "rosso"; }) ? "1" : "0";
 
     function sumField(key, field){
       return filtered.reduce(function(sum, c){
@@ -746,7 +737,7 @@
   }
 
   var allCampaignRows = [];
-  var campaignTablesInfo = [];
+  var splitPairs = [];
 
   var cards = data.accounts.map(function(acc){
     var card = document.createElement("div");
@@ -822,6 +813,7 @@
       split.appendChild(trafficBox);
       split.appendChild(contattiBox);
       body.appendChild(split);
+      splitPairs.push(split);
       Array.prototype.forEach.call(body.querySelectorAll("tr[data-campaign-row]"), function(tr){
         allCampaignRows.push(tr);
       });
@@ -919,12 +911,23 @@
     allCampaignRows.forEach(function(tr){
       tr.hidden = redRowsOnly && tr.__campaign.color !== "rosso";
     });
-    campaignTablesInfo.forEach(function(info){
-      var anyVisible = Array.prototype.some.call(
-        info.tbody.querySelectorAll("tr[data-campaign-row]"),
-        function(tr){ return !tr.hidden; }
-      );
-      info.placeholder.hidden = !redRowsOnly || anyVisible;
+
+    // se un intero box (traffico o contatti) non ha nessuna campagna rossa,
+    // lo si nasconde del tutto invece di lasciarlo vuoto, cosi' l'altro box
+    // occupa tutta la larghezza disponibile
+    splitPairs.forEach(function(split){
+      var boxes = Array.prototype.slice.call(split.children);
+      if(!redRowsOnly){
+        boxes.forEach(function(b){ b.hidden = false; });
+        split.classList.remove("single-box");
+        return;
+      }
+      var anyHasRed = boxes.some(function(b){ return b.dataset.hasRed === "1"; });
+      boxes.forEach(function(b){
+        b.hidden = anyHasRed && b.dataset.hasRed !== "1";
+      });
+      var visibleBoxCount = boxes.filter(function(b){ return !b.hidden; }).length;
+      split.classList.toggle("single-box", visibleBoxCount === 1);
     });
   }
   searchInput.addEventListener("input", applyFilters);
