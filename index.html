@@ -386,7 +386,7 @@
   <div class="coach-table">
     <table class="coach-summary">
       <thead>
-        <tr><th>Coach</th><th>Studenti</th><th>Verde</th><th>Giallo</th><th>Rosso</th><th>Spesa oggi</th></tr>
+        <tr><th>Coach</th><th>Studenti</th><th>Verde</th><th>Giallo</th><th>Rosso</th></tr>
       </thead>
       <tbody id="coach-summary-body"></tbody>
     </table>
@@ -403,17 +403,19 @@
   <div class="accounts" id="accounts"></div>
   <div class="empty-state" id="accounts-empty" hidden>Nessuno studente corrisponde al filtro attuale.</div>
 
-  <div class="section-head">
-    <h2>Creatività da ruotare</h2>
-    <span class="count" id="rotation-count"></span>
-  </div>
-  <div class="rotation">
-    <table class="rotation-table">
-      <thead>
-        <tr><th>Studente</th><th>Creatività</th><th>Giorni attiva</th></tr>
-      </thead>
-      <tbody id="rotation-body"></tbody>
-    </table>
+  <div id="rotation-section">
+    <div class="section-head">
+      <h2>Creatività da ruotare</h2>
+      <span class="count" id="rotation-count"></span>
+    </div>
+    <div class="rotation">
+      <table class="rotation-table">
+        <thead>
+          <tr><th>Studente</th><th>Creatività</th><th>Giorni attiva</th></tr>
+        </thead>
+        <tbody id="rotation-body"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="legend">
@@ -421,7 +423,7 @@
     <p class="rule"><b>Traffico sul profilo</b> — verde fino a 0,70€/risultato · giallo fino a 1,05€ (baseline ×1,5, da discutere) · rosso oltre 1,05€. Il "risultato" è il click per le campagne di puro traffico, il nuovo follower per le campagne di engagement.</p>
     <p class="rule"><b>Modulo contatti</b> — soglia = minimo storico dello studente (o 5€ di default) ×1,5 · rosso se il costo/contatto la supera, o se zero conversioni nel periodo osservato.</p>
     <p class="rule"><b>Creatività</b> — segnalata quando attiva da più di 60 giorni consecutivi senza essere rinnovata.</p>
-    <p class="rule"><b>Monitoraggio</b> — campagne rosse tenute volutamente sotto osservazione invece che come allarme attivo (nessuna notifica Telegram per queste).</p>
+    <p class="rule"><b>Monitoraggio</b> — campagne rosse o gialle tenute volutamente sotto osservazione invece che come allarme attivo (nessuna notifica Telegram per queste).</p>
     <p class="rule" style="margin-top:10px;">Qualunque aumento di costo rispetto al giorno precedente viene comunque segnalato su Telegram, anche restando in zona verde. Le viste 7/30 giorni sono informative: le soglie di criticità restano ancorate al controllo giornaliero.</p>
   </div>
 
@@ -432,6 +434,14 @@
 (function(){
   "use strict";
   var data = JSON.parse(document.getElementById("data-payload").textContent);
+
+  // richiesta di Matteo: la segnalazione "creatività da ruotare" (>60 giorni
+  // attiva) resta calcolata dalla pipeline (monitor.py) ma non viene più
+  // mostrata in dashboard — nessuna vista, né la tabella globale in fondo
+  // né il badge/elenco sulle singole card studente. Impostare a true per
+  // farla ricomparire senza toccare altro.
+  var SHOW_CREATIVE_ROTATION = false;
+  document.getElementById("rotation-section").hidden = !SHOW_CREATIVE_ROTATION;
 
   var COLOR_LABEL = {rosso:"Rosso", giallo:"Giallo", verde:"Verde"};
   var REASON_LABEL = {
@@ -445,7 +455,7 @@
     btn.textContent = accepted ? "Rimuovi" : "Monitora";
     btn.title = accepted
       ? "Rimuovi dal Monitoraggio (torna a essere un allarme attivo)"
-      : "Metti in Monitoraggio (rossa tenuta volutamente, nessun allarme Telegram)";
+      : "Metti in Monitoraggio (tenuta volutamente, nessun allarme Telegram)";
   }
 
   function monitoraggioAction(accountName, campaign, cnameEl, btn){
@@ -607,7 +617,7 @@
   }});
 
   addStat({label:"Monitoraggio", value:t.monitoraggio, cls:"warn", onClick:function(){
-    openModal("Monitoraggio — rossi accettati (" + data.monitoraggio.length + ")", data.monitoraggio, function(item){
+    openModal("Monitoraggio — criticità accettate (" + data.monitoraggio.length + ")", data.monitoraggio, function(item){
       return simpleRow(item.account + " — " + item.campaign, item.reason);
     });
   }});
@@ -640,11 +650,8 @@
     var tdRed = document.createElement("td");
     tdRed.className = "num";
     tdRed.textContent = c.red;
-    var tdSpend = document.createElement("td");
-    tdSpend.className = "num";
-    tdSpend.textContent = fmtEuro(c.spend);
     tr.appendChild(tdName); tr.appendChild(tdStudents); tr.appendChild(tdGreen);
-    tr.appendChild(tdYellow); tr.appendChild(tdRed); tr.appendChild(tdSpend);
+    tr.appendChild(tdYellow); tr.appendChild(tdRed);
     tr.addEventListener("click", function(){
       coachFilterSelect.value = c.coach.toLowerCase();
       applyFilters();
@@ -730,7 +737,7 @@
       pill.className = "pill " + c.color;
       pill.textContent = COLOR_LABEL[c.color];
       tdColor.appendChild(pill);
-      if(c.color === "rosso"){
+      if(c.color === "rosso" || c.color === "giallo"){
         var monBtn = document.createElement("button");
         monBtn.type = "button";
         monBtn.className = "mon-btn";
@@ -872,7 +879,7 @@
       pm.textContent = monitoraggioCount + (monitoraggioCount === 1 ? " in monitoraggio" : " in monitoraggio");
       badges.appendChild(pm);
     }
-    if(acc.creative_flags.length){
+    if(SHOW_CREATIVE_ROTATION && acc.creative_flags.length){
       var p2 = document.createElement("span");
       p2.className = "pill giallo";
       p2.textContent = acc.creative_flags.length + " creatività";
@@ -905,7 +912,7 @@
       });
     }
 
-    if(acc.creative_flags.length){
+    if(SHOW_CREATIVE_ROTATION && acc.creative_flags.length){
       var cf = document.createElement("div");
       cf.className = "cf-list";
       cf.innerHTML = '<div class="cf-title">Creatività attive oltre soglia</div>';
