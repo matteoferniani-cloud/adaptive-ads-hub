@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AdaPTive Ads Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#eef3f9;
+    --surface:#ffffff;
+    --surface-2:#f6f9fc;
+    --ink:#0b1220;
+    --ink-soft:#4b5a68;
+    --ink-faint:#8695a3;
+    --border:rgba(11,18,32,0.10);
+    --border-strong:rgba(11,18,32,0.18);
+    --navy:#08213f;
+    --navy-2:#123058;
+    --flare:#f2cf1e;
+    --flare-ink:#08213f;
+    --good:#1c7c4d;
+    --good-soft:#e4f4ea;
+    --good-border:rgba(28,124,77,0.28);
+    --warn:#a6650f;
+    --warn-soft:#faedd9;
+    --warn-border:rgba(166,101,15,0.3);
+    --bad:#b93838;
+    --bad-soft:#fbe7e7;
+    --bad-border:rgba(185,56,56,0.3);
+    --shadow:0 1px 2px rgba(8,33,63,0.06), 0 8px 24px -12px rgba(8,33,63,0.18);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#070f1e;
+      --surface:#0e1c30;
+      --surface-2:#122238;
+      --ink:#e9eff8;
+      --ink-soft:#a4b3c4;
+      --ink-faint:#6d7d8f;
+      --border:rgba(233,239,248,0.10);
+      --border-strong:rgba(233,239,248,0.18);
+      --navy:#04162c;
+      --navy-2:#0d2846;
+      --flare:#f2cf1e;
+      --flare-ink:#08213f;
+      --good:#57c689;
+      --good-soft:rgba(87,198,137,0.14);
+      --good-border:rgba(87,198,137,0.35);
+      --warn:#e0a542;
+      --warn-soft:rgba(224,165,66,0.14);
+      --warn-border:rgba(224,165,66,0.35);
+      --bad:#e0716f;
+      --bad-soft:rgba(224,113,111,0.14);
+      --bad-border:rgba(224,113,111,0.35);
+      --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#070f1e;
+    --surface:#0e1c30;
+    --surface-2:#122238;
+    --ink:#e9eff8;
+    --ink-soft:#a4b3c4;
+    --ink-faint:#6d7d8f;
+    --border:rgba(233,239,248,0.10);
+    --border-strong:rgba(233,239,248,0.18);
+    --navy:#04162c;
+    --navy-2:#0d2846;
+    --flare:#f2cf1e;
+    --flare-ink:#08213f;
+    --good:#57c689;
+    --good-soft:rgba(87,198,137,0.14);
+    --good-border:rgba(87,198,137,0.35);
+    --warn:#e0a542;
+    --warn-soft:rgba(224,165,66,0.14);
+    --warn-border:rgba(224,165,66,0.35);
+    --bad:#e0716f;
+    --bad-soft:rgba(224,113,111,0.14);
+    --bad-border:rgba(224,113,111,0.35);
+    --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Source Sans 3", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:"Big Shoulders Display", "Arial Narrow", sans-serif;
+    text-transform:uppercase; letter-spacing:.01em; text-wrap:balance;
+  }
+  .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  a{ color:inherit; }
+  button{ font:inherit; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    background:linear-gradient(155deg, var(--navy), var(--navy-2));
+    color:#f4f7fb;
+    padding:22px clamp(16px,4vw,40px);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .mark{
+    font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:26px;
+    background:var(--flare); color:var(--flare-ink); padding:2px 10px; border-radius:6px;
+    letter-spacing:.01em;
+  }
+  .brand .word{ font-size:15px; color:#c7d4e3; letter-spacing:.08em; text-transform:uppercase; }
+  .topbar .meta{ text-align:right; font-size:12.5px; color:#a9bad0; }
+  .topbar .meta b{ color:#f4f7fb; font-weight:600; }
+
+  /* ---------- layout ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:clamp(16px,3vw,32px) clamp(16px,4vw,40px) 64px; }
+
+  /* ---------- stat row ---------- */
+  .stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:22px 0 28px; }
+  .stat{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; box-shadow:var(--shadow); text-align:left;
+  }
+  button.stat{ cursor:pointer; transition:transform .1s ease, box-shadow .1s ease; }
+  button.stat:hover{ box-shadow:0 2px 4px rgba(8,33,63,0.1), 0 12px 28px -12px rgba(8,33,63,0.26); }
+  button.stat:active{ transform:translateY(1px); }
+  .stat .label{ font-size:11.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .stat .label .clickhint{ font-size:10px; color:var(--ink-faint); text-transform:none; letter-spacing:0; }
+  .stat .value{ font-family:"Big Shoulders Display",sans-serif; font-weight:700; font-size:32px; line-height:1; }
+  .stat.good .value{ color:var(--good); }
+  .stat.warn .value{ color:var(--warn); }
+  .stat.bad .value{ color:var(--bad); }
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    margin-bottom:18px; padding-bottom:18px; border-bottom:1px solid var(--border);
+  }
+  .search{
+    flex:1 1 220px; position:relative;
+  }
+  .search input{
+    width:100%; padding:10px 14px; border-radius:9px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--ink); font:inherit; font-size:14px;
+  }
+  .search input:focus{ outline:2px solid var(--flare); outline-offset:1px; }
+  .toggle{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-soft);
+    user-select:none; cursor:pointer;
+  }
+  .toggle input{ width:16px; height:16px; accent-color:var(--navy); cursor:pointer; }
+  .coach-select{
+    padding:9px 12px; border-radius:9px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--ink); font:inherit; font-size:13.5px; cursor:pointer;
+  }
+  .coach-select:focus{ outline:2px solid var(--flare); outline-offset:1px; }
+  .account .coach-pill{ background:var(--surface-2); color:var(--ink-soft); border-color:var(--border); }
+
+  /* ---------- riepilogo per coach ---------- */
+  .coach-table{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  table.coach-summary{ width:100%; border-collapse:collapse; font-size:13px; min-width:480px; }
+  table.coach-summary th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:12px 16px; border-bottom:1px solid var(--border);
+  }
+  table.coach-summary td{ padding:10px 16px; border-bottom:1px solid var(--border); }
+  table.coach-summary tbody tr:last-child td{ border-bottom:none; }
+  table.coach-summary tbody tr{ cursor:pointer; }
+  table.coach-summary tbody tr:hover{ background:var(--surface-2); }
+  table.coach-summary .coach-name{ font-weight:600; }
+
+  /* ---------- banner filtro rosso ---------- */
+  .filter-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--bad-soft); border:1px solid var(--bad-border); color:var(--bad);
+    border-radius:10px; padding:10px 16px; font-size:13px; font-weight:600; margin-bottom:16px;
+  }
+  .filter-banner button{
+    border:1px solid var(--bad-border); background:var(--surface); color:var(--bad); font-weight:600;
+    font-size:12.5px; padding:6px 12px; border-radius:8px; cursor:pointer; white-space:nowrap;
+  }
+  .filter-banner button:hover{ background:var(--bad-soft); }
+
+  /* ---------- section headings ---------- */
+  .section-head{ display:flex; align-items:baseline; gap:12px; margin:34px 0 14px; }
+  .section-head h2{ font-size:22px; margin:0; font-weight:700; }
+  .section-head .count{ font-size:12.5px; color:var(--ink-faint); }
+
+  /* ---------- account cards ---------- */
+  .accounts{ display:flex; flex-direction:column; gap:10px; }
+  .account{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .account > .head{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer;
+    background:var(--surface);
+  }
+  .account > .head:hover{ background:var(--surface-2); }
+  .account .stripe{ width:5px; align-self:stretch; border-radius:3px; flex-shrink:0; }
+  .stripe.rosso{ background:var(--bad); }
+  .stripe.giallo{ background:var(--warn); }
+  .stripe.verde{ background:var(--good); }
+  .stripe.grigio{ background:var(--ink-faint); } /* notorieta': in osservazione, nessuna soglia */
+  .account .name{ font-weight:600; font-size:15px; flex:1 1 auto; min-width:160px; }
+  .account .sub{ font-size:12px; color:var(--ink-soft); font-weight:400; }
+  .account .chev{ transition:transform .15s ease; color:var(--ink-faint); flex-shrink:0; }
+  .account.open .chev{ transform:rotate(90deg); }
+  .account .badges{ display:flex; gap:6px; flex-wrap:wrap; }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:20px; white-space:nowrap; border:1px solid transparent;
+  }
+  .pill.rosso{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border); }
+  .pill.giallo{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn-border); }
+  .pill.verde{ background:var(--good-soft); color:var(--good); border-color:var(--good-border); }
+  .pill.grigio{ background:var(--surface-2); color:var(--ink-soft); border-color:var(--border); } /* in osservazione */
+  .pill.neutral{ background:var(--surface-2); color:var(--ink-soft); border-color:var(--border); }
+
+  .status-cell{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .mon-btn{
+    font-size:10.5px; font-weight:600; border:1px solid var(--border-strong); background:var(--surface);
+    color:var(--ink-soft); padding:3px 9px; border-radius:20px; cursor:pointer; white-space:nowrap;
+  }
+  .mon-btn:hover{ background:var(--surface-2); color:var(--ink); }
+  .mon-btn:disabled{ opacity:.55; cursor:default; }
+
+  .reason-tag{
+    display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+    padding:1px 7px; border-radius:5px; margin-bottom:3px;
+  }
+  .reason-tag.zero_conversioni, .reason-tag.zero_risultati{ background:var(--bad-soft); color:var(--bad); }
+  .reason-tag.costo_elevato{ background:var(--warn-soft); color:var(--warn); }
+  .reason-tag.ok{ background:var(--good-soft); color:var(--good); }
+
+  .account .body{ display:none; border-top:1px solid var(--border); padding:14px 16px 16px; }
+  .account.open .body{ display:block; }
+
+  .split{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:640px){ .split{ grid-template-columns:1fr; } }
+  .split.single-box .split-box{ grid-column:1 / -1; }
+  .split-box{ border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface-2); }
+  .split-box .box-title{
+    font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:700;
+    padding:9px 12px; border-bottom:1px solid var(--border); background:var(--surface);
+  }
+  .split-box .box-empty{ padding:14px 12px; font-size:12.5px; color:var(--ink-faint); }
+
+  table.campaigns{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.campaigns th{
+    text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:8px 12px 6px; border-bottom:1px solid var(--border);
+  }
+  table.campaigns td{ padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.campaigns tbody tr:last-child td{ border-bottom:none; }
+  table.campaigns tbody tr.row-critical{ background:var(--bad-soft); }
+  table.campaigns tbody tr.row-critical td{ border-bottom-color:var(--bad-border); }
+  table.campaigns tbody tr.row-critical td:first-child{ box-shadow:inset 3px 0 0 var(--bad); }
+  table.campaigns tbody tr.row-critical .cname{ color:var(--bad); }
+  table.campaigns tfoot td{ padding:6px 12px; font-weight:700; }
+  table.campaigns tfoot tr:first-child td{ border-top:2px solid var(--border); padding-top:8px; }
+  table.campaigns tfoot tr:not(:first-child) td{ border-top:1px solid var(--border); }
+  table.campaigns tfoot tr:last-child td{ padding-bottom:8px; }
+  table.campaigns tfoot .box-total-label{ color:var(--ink-soft); font-weight:600; text-transform:uppercase; font-size:10.5px; letter-spacing:.02em; }
+  table.campaigns tfoot .box-total-label-secondary{ color:var(--ink-faint); font-weight:600; text-transform:none; font-size:10.5px; letter-spacing:0; }
+  table.campaigns tfoot .box-total-spend-secondary{ font-weight:600; color:var(--ink-soft); font-size:11.5px; }
+  .campaigns .cname{ font-weight:600; }
+  .campaigns .reason{ color:var(--ink-soft); font-size:11.5px; margin-top:2px; }
+  .campaigns .metric-note{ color:var(--ink-faint); font-size:10.5px; }
+
+  .cf-list{ padding:12px 16px 4px; }
+  .cf-list .cf-title{ font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:8px; }
+  .cf-row{ display:flex; justify-content:space-between; gap:12px; padding:6px 0; font-size:13px; border-top:1px solid var(--border); }
+  .cf-row:first-of-type{ border-top:none; }
+  .cf-row .cf-name{ flex:1 1 auto; }
+  .cf-row .cf-days{ color:var(--warn); font-weight:600; white-space:nowrap; }
+
+  /* ---------- rotation table ---------- */
+  .rotation{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  table.rotation-table{ width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+  table.rotation-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:12px 16px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--surface);
+  }
+  table.rotation-table td{ padding:10px 16px; border-bottom:1px solid var(--border); }
+  table.rotation-table tr:last-child td{ border-bottom:none; }
+  .days-bar-wrap{ display:flex; align-items:center; gap:8px; }
+  .days-bar{ height:6px; border-radius:3px; background:var(--warn); flex-shrink:0; }
+  .days-track{ flex:1 1 auto; background:var(--border); border-radius:3px; overflow:hidden; max-width:120px; }
+
+  .empty-state{ padding:28px; text-align:center; color:var(--ink-faint); font-size:13.5px; }
+
+  /* ---------- legend / footer ---------- */
+  .legend{
+    margin-top:40px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
+    padding:20px 22px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .legend h3{ font-size:14px; margin:0 0 10px; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .legend .rule{ margin:0 0 6px; }
+  .legend .rule b{ color:var(--ink); }
+  footer.page{
+    text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:28px;
+  }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(4,10,20,0.55); display:flex; align-items:flex-start;
+    justify-content:center; padding:6vh 16px; z-index:50; backdrop-filter:blur(1px);
+  }
+  .modal{
+    background:var(--surface); border-radius:14px; max-width:640px; width:100%; max-height:84vh;
+    overflow-y:auto; box-shadow:0 20px 60px -12px rgba(0,0,0,0.4); border:1px solid var(--border);
+  }
+  .modal-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:16px 20px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);
+  }
+  .modal-head h3{ margin:0; font-size:18px; }
+  .modal-close{
+    border:none; background:var(--surface-2); color:var(--ink-soft); width:30px; height:30px; border-radius:8px;
+    cursor:pointer; font-size:16px; line-height:1;
+  }
+  .modal-body{ padding:14px 20px 22px; }
+  .modal-row{
+    display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);
+    font-size:13.5px;
+  }
+  .modal-row:last-child{ border-bottom:none; }
+  .modal-row .m-sub{ color:var(--ink-soft); font-size:12px; }
+  .modal-empty{ padding:20px 0; text-align:center; color:var(--ink-faint); font-size:13.5px; }
+
+  [hidden]{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    .chev{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+
+<script type="application/json" id="data-payload">{"date":"2026-09-17","generated_label":"17 settembre 2026","totals":{"students":1,"students_total":1,"campaigns":1,"green":1,"yellow_campaigns":0,"red":0,"grey_in_osservazione":0,"creative_flags":30,"monitoraggio":0},"accounts":[{"name":"Ad Account #1 (Pixel)","coach":"Non assegnato","campaigns":[{"id":"120228177790820571","name":"Traffico sul profilo","category":"traffico","sub_type":"click","windows":{"1d":{"spend":6.41,"risultati":69,"cost_per_result":0.09289855072463768},"7d":{"spend":49.41,"risultati":536,"cost_per_result":0.09218283582089552},"30d":{"spend":209.34,"risultati":2867,"cost_per_result":0.07301709103592606}},"color":"verde","reason_type":"ok","reason":"costo/risultato 0.09 EUR entro baseline 0.70 EUR","accepted":false}],"spend":6.41,"creative_flags":[{"name":"L vers. 2 foto 2","days":682},{"name":"L vers. 2 foto 1","days":682},{"name":"L vers. 1 foto 2","days":682},{"name":"L&V vers. 3","days":682},{"name":"L&V vers. 2","days":682},{"name":"L&V vers. 1","days":682},{"name":"L&M vers. 2","days":682},{"name":"L&M vers. 1","days":682},{"name":"L vers. 3","days":682},{"name":"L vers. 1 foto 1","days":682},{"name":"L copy 2 \"Guadagnano troppo poco\"","days":680},{"name":"L copy 1 \"smetti di vendere sessioni 1-1\"","days":680},{"name":"M copy 3 vers 1 \"Sono un PT e ho smesso di fare...\"","days":680},{"name":"L copy 1 \"scienze motorie è stata inutile?\"","days":680},{"name":"L copy 2 \"E se scienze motorie\"","days":680},{"name":"M copy 3 vers 3 \"Studio\"","days":680},{"name":"L copy 2 \"Staccarsi dal lavoro in palestra\"","days":680},{"name":"L copy 1 \"se vendi sessioni 1-1...\"","days":680},{"name":"L copy 1 \"lavorare in palestra è inutile?\"","days":680},{"name":"M copy 3 vers 2 \"Sono un PT e ho smesso di fare...\" - Copia","days":680},{"name":"L copy 2 \"Lavori in palestra o in qualsiasi catena\"","days":680},{"name":"L copy 1 \"ho un regalo per te\"","days":680},{"name":"L copy 2 \"I PT spariranno\"","days":680},{"name":"M copy 3 vers 4 “Nel 2022 ho chiuso il mio studio PT”","days":680},{"name":"Corpo 1 \"Manchi solo te\"","days":660},{"name":"Corpo 1 \"Oltre 920 PT\"","days":660},{"name":"Corpo 1 \"Manca pochissimo\"","days":660},{"name":"Corpo 1 \"Ancora indeciso\"","days":660},{"name":"1 - Copia","days":157},{"name":"1","days":136}],"worst":"verde","has_activity":true}],"red_clients":[],"monitoraggio":[],"by_coach":[{"coach":"Non assegnato","students":1,"green":1,"yellow":0,"red":0,"grey":0,"spend":6.41}]}</script>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">AdaPT</span>
+    <span class="word">Ads&nbsp;Hub</span>
+  </div>
+  <div class="meta">
+    Controllo del <b id="meta-date">—</b><br>
+    Aggiornato automaticamente ogni giorno
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <div class="search">
+      <input id="search-input" type="text" placeholder="Cerca studente…" autocomplete="off">
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="only-critical">
+      Mostra solo criticità
+    </label>
+    <select id="coach-filter" class="coach-select">
+      <option value="">Tutti i coach</option>
+    </select>
+  </div>
+
+  <div class="section-head">
+    <h2>Riepilogo per coach</h2>
+    <span class="count" id="coach-summary-count"></span>
+  </div>
+  <div class="coach-table">
+    <table class="coach-summary">
+      <thead>
+        <tr><th>Coach</th><th>Studenti</th><th>Verde</th><th>Giallo</th><th>Rosso</th></tr>
+      </thead>
+      <tbody id="coach-summary-body"></tbody>
+    </table>
+  </div>
+
+  <div class="section-head">
+    <h2>Studenti</h2>
+    <span class="count" id="students-count"></span>
+  </div>
+  <div class="filter-banner" id="filter-banner" hidden>
+    <span>Filtro attivo: solo studenti con almeno una campagna in rosso.</span>
+    <button type="button" id="clear-red-filter">Mostra tutti gli studenti</button>
+  </div>
+  <div class="accounts" id="accounts"></div>
+  <div class="empty-state" id="accounts-empty" hidden>Nessuno studente corrisponde al filtro attuale.</div>
+
+  <div id="rotation-section">
+    <div class="section-head">
+      <h2>Creatività da ruotare</h2>
+      <span class="count" id="rotation-count"></span>
+    </div>
+    <div class="rotation">
+      <table class="rotation-table">
+        <thead>
+          <tr><th>Studente</th><th>Creatività</th><th>Giorni attiva</th></tr>
+        </thead>
+        <tbody id="rotation-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Come leggere i colori</h3>
+    <p class="rule"><b>Traffico sul profilo</b> — verde fino a 0,70€/risultato · giallo fino a 1,05€ (baseline ×1,5, da discutere) · rosso oltre 1,05€. Il "risultato" è il click per le campagne di puro traffico, il nuovo follower per le campagne di engagement.</p>
+    <p class="rule"><b>Modulo contatti</b> — soglia = minimo storico dello studente (o 5€ di default) ×1,5 · rosso se il costo/contatto la supera, o se zero conversioni nel periodo osservato.</p>
+    <p class="rule"><b>Creatività</b> — segnalata quando attiva da più di 60 giorni consecutivi senza essere rinnovata.</p>
+    <p class="rule"><b>Monitoraggio</b> — campagne rosse o gialle tenute volutamente sotto osservazione invece che come allarme attivo (nessuna notifica Telegram per queste).</p>
+    <p class="rule" style="margin-top:10px;">Qualunque aumento di costo rispetto al giorno precedente viene comunque segnalato su Telegram, anche restando in zona verde. Le viste 7/30 giorni sono informative: le soglie di criticità restano ancorate al controllo giornaliero.</p>
+  </div>
+
+  <footer class="page">AdaPTive Ads Monitor — dati Meta aggiornati quotidianamente dalla pipeline del System User.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var data = JSON.parse(document.getElementById("data-payload").textContent);
+
+  // richiesta di Matteo: la segnalazione "creatività da ruotare" (>60 giorni
+  // attiva) resta calcolata dalla pipeline (monitor.py) ma non viene più
+  // mostrata in dashboard — nessuna vista, né la tabella globale in fondo
+  // né il badge/elenco sulle singole card studente. Impostare a true per
+  // farla ricomparire senza toccare altro.
+  var SHOW_CREATIVE_ROTATION = false;
+  document.getElementById("rotation-section").hidden = !SHOW_CREATIVE_ROTATION;
+
+  var COLOR_LABEL = {rosso:"Rosso", giallo:"Giallo", verde:"Verde", grigio:"In osservazione"};
+  var REASON_LABEL = {
+    zero_conversioni:"Zero conversioni", zero_risultati:"Zero risultati",
+    costo_elevato:"Costo elevato", ok:"Nella norma"
+  };
+  // ---------- pulsante Monitoraggio (Cloudflare Worker) ----------
+  var WORKER_URL = "https://adaptive-monitoraggio.matteoferniani.workers.dev/";
+
+  function updateMonBtnLabel(btn, accepted){
+    btn.textContent = accepted ? "Rimuovi" : "Monitora";
+    btn.title = accepted
+      ? "Rimuovi dal Monitoraggio (torna a essere un allarme attivo)"
+      : "Metti in Monitoraggio (tenuta volutamente, nessun allarme Telegram)";
+  }
+
+  function monitoraggioAction(accountName, campaign, cnameEl, btn){
+    var goingToAccept = !campaign.accepted;
+    var action = goingToAccept ? "accept" : "reject";
+    var pwd = window.prompt(goingToAccept
+      ? "Password per mettere in Monitoraggio “" + campaign.name + "”:"
+      : "Password per rimuovere dal Monitoraggio “" + campaign.name + "”:");
+    if(pwd === null || pwd === "") return;
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Invio…";
+    fetch(WORKER_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        password: pwd, action: action, campaign_id: campaign.id,
+        account_name: accountName, campaign_name: campaign.name
+      })
+    }).then(function(resp){
+      return resp.json().catch(function(){ return {}; }).then(function(json){
+        return {status: resp.status, json: json};
+      });
+    }).then(function(res){
+      btn.disabled = false;
+      if(res.status === 200 && res.json && res.json.ok){
+        campaign.accepted = goingToAccept;
+        updateMonBtnLabel(btn, campaign.accepted);
+        cnameEl.textContent = campaign.name + (campaign.accepted ? " (accettata)" : "");
+        window.alert(goingToAccept
+          ? "Fatto. La dashboard mostrerà “in monitoraggio” dal prossimo aggiornamento automatico; da oggi non riceverai più l'allarme Telegram per questa campagna."
+          : "Fatto. Tornerà a comparire come criticità attiva (e con l'allarme Telegram) dal prossimo aggiornamento automatico.");
+      } else {
+        btn.textContent = originalLabel;
+        window.alert("Non è stato possibile completare l'operazione: " +
+          (res.json && res.json.error ? res.json.error : ("errore " + res.status)));
+      }
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      window.alert("Errore di connessione: " + err.message);
+    });
+  }
+
+  function fmtEuro(n){
+    if(n === null || n === undefined) return "n/d";
+    return "€ " + n.toFixed(2).replace(".", ",");
+  }
+  function fmtCost(n){
+    if(n === null || n === undefined) return "n/d";
+    return "€ " + n.toFixed(3).replace(/0+$/,"").replace(/\.$/,"").replace(".", ",");
+  }
+
+  // ---------- date label ----------
+  document.getElementById("meta-date").textContent = data.generated_label || data.date;
+
+  // ---------- modal ----------
+  function openModal(title, items, renderRow){
+    var overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    var modal = document.createElement("div");
+    modal.className = "modal";
+    var head = document.createElement("div");
+    head.className = "modal-head";
+    var h3 = document.createElement("h3");
+    h3.textContent = title;
+    var closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "✕";
+    closeBtn.setAttribute("aria-label", "Chiudi");
+    head.appendChild(h3); head.appendChild(closeBtn);
+    var body = document.createElement("div");
+    body.className = "modal-body";
+    if(!items.length){
+      var empty = document.createElement("div");
+      empty.className = "modal-empty";
+      empty.textContent = "Nessun elemento al momento.";
+      body.appendChild(empty);
+    } else {
+      items.forEach(function(item){ body.appendChild(renderRow(item)); });
+    }
+    modal.appendChild(head); modal.appendChild(body);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    function close(){ overlay.remove(); document.removeEventListener("keydown", onKey); }
+    function onKey(e){ if(e.key === "Escape") close(); }
+    overlay.addEventListener("click", function(e){ if(e.target === overlay) close(); });
+    closeBtn.addEventListener("click", close);
+    document.addEventListener("keydown", onKey);
+  }
+
+  function simpleRow(main, sub){
+    var row = document.createElement("div");
+    row.className = "modal-row";
+    var left = document.createElement("div");
+    left.textContent = main;
+    var right = document.createElement("div");
+    right.className = "m-sub";
+    right.textContent = sub || "";
+    row.appendChild(left); row.appendChild(right);
+    return row;
+  }
+
+  // ---------- stats ----------
+  var t = data.totals;
+  var statsEl = document.getElementById("stats");
+
+  function addStat(opts){
+    var el;
+    if(opts.onClick){
+      el = document.createElement("button");
+      el.type = "button";
+    } else {
+      el = document.createElement("div");
+    }
+    el.className = "stat" + (opts.cls ? " " + opts.cls : "");
+    var label = document.createElement("div");
+    label.className = "label";
+    var labelText = document.createElement("span");
+    labelText.textContent = opts.label;
+    label.appendChild(labelText);
+    if(opts.onClick){
+      var hint = document.createElement("span");
+      hint.className = "clickhint";
+      hint.textContent = "→";
+      label.appendChild(hint);
+    }
+    var value = document.createElement("div");
+    value.className = "value num";
+    value.textContent = opts.value;
+    el.appendChild(label); el.appendChild(value);
+    if(opts.onClick){ el.addEventListener("click", opts.onClick); }
+    statsEl.appendChild(el);
+  }
+
+  addStat({label:"Studenti monitorati", value:t.students, onClick:function(){
+    var monitored = data.accounts.filter(function(acc){ return acc.has_activity; })
+      .slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
+    openModal("Studenti monitorati (" + monitored.length + ")", monitored, function(acc){
+      return simpleRow(acc.name, acc.campaigns.length + " campagne · " + fmtEuro(acc.spend));
+    });
+  }});
+
+  addStat({label:"Database studenti", value:t.students_total, onClick:function(){
+    var all = data.accounts.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
+    openModal("Database studenti (" + all.length + ")", all, function(acc){
+      var sub = acc.has_activity ? (acc.campaigns.length + " campagne · " + fmtEuro(acc.spend)) : "nessuna campagna attiva";
+      return simpleRow(acc.name, sub);
+    });
+  }});
+
+  addStat({label:"Campagne in verde", value:t.green, cls:"good"});
+
+  addStat({label:"Clienti in rosso", value:data.red_clients.length, cls:"bad", onClick:function(){
+    redOnlyFilter = true;
+    searchInput.value = "";
+    applyFilters();
+    accountsEl.scrollIntoView({behavior:"smooth", block:"start"});
+  }});
+
+  addStat({label:"Monitoraggio", value:t.monitoraggio, cls:"warn", onClick:function(){
+    openModal("Monitoraggio — criticità accettate (" + data.monitoraggio.length + ")", data.monitoraggio, function(item){
+      return simpleRow(item.account + " — " + item.campaign, item.reason);
+    });
+  }});
+
+  // ---------- riepilogo per coach ----------
+  var byCoach = data.by_coach || [];
+  var coachFilterSelect = document.getElementById("coach-filter");
+  byCoach.forEach(function(c){
+    var opt = document.createElement("option");
+    opt.value = c.coach.toLowerCase();
+    opt.textContent = c.coach + " (" + c.students + ")";
+    coachFilterSelect.appendChild(opt);
+  });
+  // "Non assegnato" non è un coach reale: resta come opzione nel filtro qui
+  // sopra (utile per isolare gli account senza coach), ma non compare nella
+  // tabella di riepilogo, per tenerla più ordinata.
+  var byCoachTable = byCoach.filter(function(c){ return c.coach !== "Non assegnato"; });
+  document.getElementById("coach-summary-count").textContent = byCoachTable.length + " coach";
+  var coachSummaryBody = document.getElementById("coach-summary-body");
+  byCoachTable.forEach(function(c){
+    var tr = document.createElement("tr");
+    var tdName = document.createElement("td");
+    tdName.className = "coach-name";
+    tdName.textContent = c.coach;
+    var tdStudents = document.createElement("td");
+    tdStudents.className = "num";
+    tdStudents.textContent = c.students;
+    var tdGreen = document.createElement("td");
+    tdGreen.className = "num";
+    tdGreen.textContent = c.green;
+    var tdYellow = document.createElement("td");
+    tdYellow.className = "num";
+    tdYellow.textContent = c.yellow;
+    var tdRed = document.createElement("td");
+    tdRed.className = "num";
+    tdRed.textContent = c.red;
+    tr.appendChild(tdName); tr.appendChild(tdStudents); tr.appendChild(tdGreen);
+    tr.appendChild(tdYellow); tr.appendChild(tdRed);
+    tr.addEventListener("click", function(){
+      coachFilterSelect.value = c.coach.toLowerCase();
+      applyFilters();
+      accountsEl.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+    coachSummaryBody.appendChild(tr);
+  });
+
+  // ---------- account cards ----------
+  var accountsEl = document.getElementById("accounts");
+  var emptyEl = document.getElementById("accounts-empty");
+  document.getElementById("students-count").textContent = data.accounts.length + " totali";
+
+  function metricNote(c){
+    if(c.category === "contatti") return "";
+    if(c.sub_type === "engagement") return "/follower";
+    return "/click";
+  }
+
+  function buildCampaignsTable(campaigns, category, accountName){
+    var box = document.createElement("div");
+    box.className = "split-box";
+    var titleEl = document.createElement("div");
+    titleEl.className = "box-title";
+    titleEl.textContent = category === "traffico" ? "Traffico sul profilo" : "Modulo contatti";
+    box.appendChild(titleEl);
+
+    var filtered = campaigns.filter(function(c){ return c.category === category; });
+    if(!filtered.length){
+      var empty = document.createElement("div");
+      empty.className = "box-empty";
+      empty.textContent = "Nessuna campagna in questa categoria.";
+      box.appendChild(empty);
+      box.dataset.hasRed = "0";
+      return box;
+    }
+
+    var table = document.createElement("table");
+    table.className = "campaigns";
+    if(category === "traffico"){
+      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Costo</th><th>Stato</th></tr></thead>";
+    } else {
+      table.innerHTML = "<thead><tr><th>Campagna</th><th>Spesa</th><th>Risultati</th><th>Costo/contatto</th><th>Stato</th></tr></thead>";
+    }
+    var tbody = document.createElement("tbody");
+    table.dataset.category = category;
+    filtered.forEach(function(c){
+      var tr = document.createElement("tr");
+      tr.dataset.campaignRow = "1";
+      tr.__campaign = c;
+      if(c.color === "rosso"){ tr.classList.add("row-critical"); }
+
+      var tdName = document.createElement("td");
+      var reasonTag = document.createElement("div");
+      reasonTag.className = "reason-tag " + c.reason_type;
+      reasonTag.textContent = REASON_LABEL[c.reason_type] || c.reason_type;
+      var cname = document.createElement("div");
+      cname.className = "cname";
+      cname.textContent = c.name + (c.accepted ? " (accettata)" : "");
+      var reasonTxt = document.createElement("div");
+      reasonTxt.className = "reason";
+      reasonTxt.textContent = c.reason;
+      tdName.appendChild(reasonTag); tdName.appendChild(cname); tdName.appendChild(reasonTxt);
+      tr.appendChild(tdName);
+
+      var tdSpend = document.createElement("td");
+      tdSpend.className = "num spend-cell";
+      tr.appendChild(tdSpend);
+
+      if(category === "contatti"){
+        var tdRis = document.createElement("td");
+        tdRis.className = "num ris-cell";
+        tr.appendChild(tdRis);
+      }
+
+      var tdCost = document.createElement("td");
+      tdCost.className = "num cost-cell";
+      tr.appendChild(tdCost);
+
+      var tdColor = document.createElement("td");
+      tdColor.className = "status-cell";
+      var pill = document.createElement("span");
+      pill.className = "pill " + c.color;
+      pill.textContent = COLOR_LABEL[c.color];
+      tdColor.appendChild(pill);
+      if(c.color === "rosso" || c.color === "giallo"){
+        var monBtn = document.createElement("button");
+        monBtn.type = "button";
+        monBtn.className = "mon-btn";
+        updateMonBtnLabel(monBtn, c.accepted);
+        monBtn.addEventListener("click", function(){
+          monitoraggioAction(accountName, c, cname, monBtn);
+        });
+        tdColor.appendChild(monBtn);
+      }
+      tr.appendChild(tdColor);
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    box.dataset.hasRed = filtered.some(function(c){ return c.color === "rosso"; }) ? "1" : "0";
+
+    function sumField(key, field){
+      return filtered.reduce(function(sum, c){
+        var w = c.windows[key] || c.windows["1d"];
+        var v = w[field];
+        return sum + (typeof v === "number" ? v : 0);
+      }, 0);
+    }
+
+    function footRow(labelText, key, primary){
+      var spesa = sumField(key, "spend");
+      var risultatiSum = sumField(key, "risultati");
+      var costo = risultatiSum > 0 ? (spesa / risultatiSum) : null;
+      var valueCls = primary ? "num box-total-spend" : "num box-total-spend-secondary";
+      var labelCls = primary ? "box-total-label" : "box-total-label-secondary";
+
+      var tr = document.createElement("tr");
+      var tdLabel = document.createElement("td");
+      tdLabel.className = labelCls;
+      tdLabel.textContent = labelText;
+      tr.appendChild(tdLabel);
+
+      var tdSpend = document.createElement("td");
+      tdSpend.className = valueCls;
+      tdSpend.textContent = fmtEuro(spesa);
+      tr.appendChild(tdSpend);
+
+      if(category === "contatti"){
+        var tdRis = document.createElement("td");
+        tdRis.className = valueCls;
+        tdRis.textContent = risultatiSum;
+        tr.appendChild(tdRis);
+      }
+
+      var tdCost = document.createElement("td");
+      tdCost.className = valueCls;
+      tdCost.textContent = fmtCost(costo);
+      tr.appendChild(tdCost);
+
+      var tdBlank = document.createElement("td"); // colonna "Stato", lasciata vuota nel riepilogo
+      tr.appendChild(tdBlank);
+
+      return tr;
+    }
+
+    var tfoot = document.createElement("tfoot");
+    tfoot.appendChild(footRow("Oggi", "1d", true));
+    tfoot.appendChild(footRow("Storico 7 giorni", "7d", false));
+    tfoot.appendChild(footRow("Storico 30 giorni", "30d", false));
+    table.appendChild(tfoot);
+
+    box.appendChild(table);
+    return box;
+  }
+
+  function refreshCampaignRow(tr){
+    var c = tr.__campaign;
+    var w = c.windows["1d"];
+    tr.querySelector(".spend-cell").textContent = fmtEuro(w.spend);
+    var risCell = tr.querySelector(".ris-cell");
+    if(risCell) risCell.textContent = (w.risultati === null || w.risultati === undefined) ? "n/d" : w.risultati;
+    var costCell = tr.querySelector(".cost-cell");
+    var note = metricNote(c);
+    costCell.innerHTML = "";
+    var costMain = document.createTextNode(fmtCost(w.cost_per_result));
+    costCell.appendChild(costMain);
+    if(note && w.cost_per_result !== null && w.cost_per_result !== undefined){
+      var noteEl = document.createElement("span");
+      noteEl.className = "metric-note";
+      noteEl.textContent = " " + note;
+      costCell.appendChild(noteEl);
+    }
+  }
+
+  var allCampaignRows = [];
+  var splitPairs = [];
+
+  var cards = data.accounts.map(function(acc){
+    var card = document.createElement("div");
+    card.className = "account";
+    card.dataset.name = acc.name.toLowerCase();
+    card.dataset.worst = acc.worst;
+    card.dataset.coach = (acc.coach || "").toLowerCase();
+
+    var head = document.createElement("div");
+    head.className = "head";
+
+    var stripe = document.createElement("div");
+    stripe.className = "stripe " + acc.worst;
+    head.appendChild(stripe);
+
+    var name = document.createElement("div");
+    name.className = "name";
+    name.textContent = acc.name;
+    name.appendChild(document.createElement("br"));
+    var subSpan = document.createElement("span");
+    subSpan.className = "sub";
+    subSpan.textContent = (acc.has_activity
+      ? (acc.campaigns.length + (acc.campaigns.length === 1 ? " campagna" : " campagne") + " · " + fmtEuro(acc.spend))
+      : "nessuna campagna attiva") + " · Coach: " + acc.coach;
+    name.appendChild(subSpan);
+    head.appendChild(name);
+
+    var badges = document.createElement("div");
+    badges.className = "badges";
+    var colorCounts = {rosso:0, giallo:0, verde:0};
+    var monitoraggioCount = 0;
+    acc.campaigns.forEach(function(c){
+      if(c.accepted){ monitoraggioCount++; return; }
+      colorCounts[c.color] = (colorCounts[c.color]||0) + 1;
+    });
+    ["rosso","giallo","verde"].forEach(function(col){
+      if(colorCounts[col] > 0){
+        var p = document.createElement("span");
+        p.className = "pill " + col;
+        p.textContent = colorCounts[col] + " " + COLOR_LABEL[col].toLowerCase();
+        badges.appendChild(p);
+      }
+    });
+    if(monitoraggioCount > 0){
+      var pm = document.createElement("span");
+      pm.className = "pill neutral";
+      pm.textContent = monitoraggioCount + (monitoraggioCount === 1 ? " in monitoraggio" : " in monitoraggio");
+      badges.appendChild(pm);
+    }
+    if(SHOW_CREATIVE_ROTATION && acc.creative_flags.length){
+      var p2 = document.createElement("span");
+      p2.className = "pill giallo";
+      p2.textContent = acc.creative_flags.length + " creatività";
+      badges.appendChild(p2);
+    }
+    head.appendChild(badges);
+
+    var chev = document.createElement("div");
+    chev.className = "chev";
+    chev.textContent = "▸";
+    head.appendChild(chev);
+
+    card.appendChild(head);
+    head.addEventListener("click", function(){ card.classList.toggle("open"); });
+
+    var body = document.createElement("div");
+    body.className = "body";
+
+    if(acc.campaigns.length){
+      var split = document.createElement("div");
+      split.className = "split";
+      var trafficBox = buildCampaignsTable(acc.campaigns, "traffico", acc.name);
+      var contattiBox = buildCampaignsTable(acc.campaigns, "contatti", acc.name);
+      split.appendChild(trafficBox);
+      split.appendChild(contattiBox);
+      body.appendChild(split);
+      splitPairs.push(split);
+      Array.prototype.forEach.call(body.querySelectorAll("tr[data-campaign-row]"), function(tr){
+        allCampaignRows.push(tr);
+      });
+    }
+
+    if(SHOW_CREATIVE_ROTATION && acc.creative_flags.length){
+      var cf = document.createElement("div");
+      cf.className = "cf-list";
+      cf.innerHTML = '<div class="cf-title">Creatività attive oltre soglia</div>';
+      acc.creative_flags.forEach(function(f){
+        var row = document.createElement("div");
+        row.className = "cf-row";
+        var n = document.createElement("div");
+        n.className = "cf-name";
+        n.textContent = f.name;
+        var d = document.createElement("div");
+        d.className = "cf-days";
+        d.textContent = f.days + " g";
+        row.appendChild(n); row.appendChild(d);
+        cf.appendChild(row);
+      });
+      body.appendChild(cf);
+    }
+
+    card.appendChild(body);
+    if(acc.worst === "rosso"){ card.classList.add("open"); }
+    accountsEl.appendChild(card);
+    return card;
+  });
+
+  allCampaignRows.forEach(refreshCampaignRow);
+
+  // ---------- rotation table (top overdue, global) ----------
+  var allFlags = [];
+  data.accounts.forEach(function(acc){
+    acc.creative_flags.forEach(function(f){
+      allFlags.push({account:acc.name, name:f.name, days:f.days});
+    });
+  });
+  allFlags.sort(function(a,b){ return b.days - a.days; });
+  document.getElementById("rotation-count").textContent = allFlags.length + " totali · le più urgenti in alto";
+  var maxDays = allFlags.length ? allFlags[0].days : 1;
+  var rotBody = document.getElementById("rotation-body");
+  allFlags.slice(0, 40).forEach(function(f){
+    var tr = document.createElement("tr");
+    var tdAcc = document.createElement("td");
+    tdAcc.textContent = f.account;
+    var tdName = document.createElement("td");
+    tdName.textContent = f.name;
+    var tdDays = document.createElement("td");
+    var wrap = document.createElement("div");
+    wrap.className = "days-bar-wrap";
+    var num = document.createElement("span");
+    num.className = "num";
+    num.textContent = f.days + " g";
+    var track = document.createElement("div");
+    track.className = "days-track";
+    var bar = document.createElement("div");
+    bar.className = "days-bar";
+    bar.style.width = Math.max(6, Math.round((f.days / maxDays) * 100)) + "%";
+    track.appendChild(bar);
+    wrap.appendChild(num);
+    wrap.appendChild(track);
+    tdDays.appendChild(wrap);
+    tr.appendChild(tdAcc); tr.appendChild(tdName); tr.appendChild(tdDays);
+    rotBody.appendChild(tr);
+  });
+
+  // ---------- filtering ----------
+  var searchInput = document.getElementById("search-input");
+  var onlyCritical = document.getElementById("only-critical");
+  var filterBanner = document.getElementById("filter-banner");
+  var clearRedFilterBtn = document.getElementById("clear-red-filter");
+  var redOnlyFilter = false;
+
+  function applyFilters(){
+    var q = searchInput.value.trim().toLowerCase();
+    var critOnly = onlyCritical.checked;
+    var coachVal = coachFilterSelect.value;
+    var visibleCount = 0;
+    cards.forEach(function(card){
+      var matchesSearch = !q || card.dataset.name.indexOf(q) !== -1;
+      var matchesCrit = !critOnly || card.dataset.worst !== "verde";
+      var matchesRed = !redOnlyFilter || card.dataset.worst === "rosso";
+      var matchesCoach = !coachVal || card.dataset.coach === coachVal;
+      var show = matchesSearch && matchesCrit && matchesRed && matchesCoach;
+      card.hidden = !show;
+      if(show) visibleCount++;
+    });
+    emptyEl.hidden = visibleCount !== 0;
+    filterBanner.hidden = !redOnlyFilter;
+
+    // quando e' attivo un filtro criticita' (checkbox o "Clienti in rosso"), dentro
+    // le card visibili si mostrano solo le campagne rosse, nascondendo quelle che
+    // vanno bene (verdi) o solo in allerta (gialle)
+    var redRowsOnly = critOnly || redOnlyFilter;
+    allCampaignRows.forEach(function(tr){
+      tr.hidden = redRowsOnly && tr.__campaign.color !== "rosso";
+    });
+
+    // se un intero box (traffico o contatti) non ha nessuna campagna rossa,
+    // lo si nasconde del tutto invece di lasciarlo vuoto, cosi' l'altro box
+    // occupa tutta la larghezza disponibile
+    splitPairs.forEach(function(split){
+      var boxes = Array.prototype.slice.call(split.children);
+      if(!redRowsOnly){
+        boxes.forEach(function(b){ b.hidden = false; });
+        split.classList.remove("single-box");
+        return;
+      }
+      var anyHasRed = boxes.some(function(b){ return b.dataset.hasRed === "1"; });
+      boxes.forEach(function(b){
+        b.hidden = anyHasRed && b.dataset.hasRed !== "1";
+      });
+      var visibleBoxCount = boxes.filter(function(b){ return !b.hidden; }).length;
+      split.classList.toggle("single-box", visibleBoxCount === 1);
+    });
+  }
+  searchInput.addEventListener("input", applyFilters);
+  onlyCritical.addEventListener("change", applyFilters);
+  coachFilterSelect.addEventListener("change", applyFilters);
+  clearRedFilterBtn.addEventListener("click", function(){
+    redOnlyFilter = false;
+    applyFilters();
+  });
+})();
+</script>
+
+</body>
+</html>
